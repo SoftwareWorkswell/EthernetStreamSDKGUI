@@ -1392,7 +1392,7 @@ Window {
                                          Connections{
                                             target: _controllerCore
                                             onDriveStateChanged:{
-                                                var gig = 1000000000;
+                                                var gig = 1024*1024*1024;
                                                 ssdText.text = "SSD: " + ssd
                                                 sdText.text = "SD Card: " + sd;
                                                 flashText.text = "Flash: " + flash;
@@ -2662,7 +2662,7 @@ Window {
                                         anchors.verticalCenter: parent.verticalCenter
                                         Connections{
                                             target: _controllerCore
-                                            onConnectedChanged: connectionText.text = "Connection: " + (_controllerCore.connected ? "OK" : "NONE") + "(" + (ping < 10 ? ("<10ms") :("~" + ping + " ms")) + ")"
+                                            onConnectedChanged: connectionText.text = "Connection: " + (_controllerCore.connected ? "OK" : "NONE")
                                         }
                                     }
                                 }
