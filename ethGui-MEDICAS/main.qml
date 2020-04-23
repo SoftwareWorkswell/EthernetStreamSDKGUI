@@ -18,6 +18,13 @@ Window {
         _controllerCore.setEthModeOff()
         _controllerCore.close()
     }
+    function showConnectionWindow() {
+        var component = Qt.createComponent("components/ConnectionWindow.qml");
+        var window    = component.createObject(mainWindow);
+        window.show();
+        mainWindow.hide();
+    }
+
     Rectangle{
         anchors.fill: parent
         Row{
@@ -87,10 +94,7 @@ Window {
     Component.onCompleted: {
         if(mainWindow.testGUI)
             return
-        var component = Qt.createComponent("components/ConnectionWindow.qml");
-        var window    = component.createObject(mainWindow);
-        window.show();
-        mainWindow.hide();
+        showConnectionWindow()
     }
     ApplicationWindow {
         id: streamWindow

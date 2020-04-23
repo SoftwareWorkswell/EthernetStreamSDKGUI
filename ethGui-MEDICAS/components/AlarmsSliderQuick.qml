@@ -21,25 +21,26 @@ Rectangle{
 
     RangeSlider {
         id: quickManSlider
-
         anchors.left: sliderFrom.right
         width: parent.width*2/3
-        from: 0
-        to: 50
-        first.value: _controllerCore.alarmPreventive
-        second.value: _controllerCore.alarmCritical
+        from: 35.0
+        to: 50.0
+        first.value: _controllerCore.alarmPreventive()
+        second.value: _controllerCore.alarmCritical()
+        first.onMoved: _controllerCore.alarmPreventive = first.value.toFixed(2)
+        second.onMoved: _controllerCore.alarmCritical = second.value.toFixed(2)
 
     }
     Connections{
         target: _controllerCore
         onAlarmPreventiveChanged:{
-            quickManSlider.first.value = _controllerCore.alarmPreventive
+            quickManSlider.first.value = val
         }
     }
     Connections{
         target: _controllerCore
         onAlarmCriticalChanged:{
-            quickManSlider.second.value = _controllerCore.alarmCritical
+            quickManSlider.second.value = val
         }
     }
 

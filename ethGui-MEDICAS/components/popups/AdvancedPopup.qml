@@ -32,7 +32,7 @@ ControlPopup{
                 CustomComboBox{
                     Layout.alignment: Qt.AlignCenter
                     id: gammaCombo
-                    model: ["STANDARD", "STREIGHT", "NARROW", "WIDE"]
+                    model: ["STANDARD", "STRAIGHT", "NARROW", "WIDE"]
                     onCurrentTextChanged: {
                         _controllerCore.gamma = currentIndex
                     }
@@ -58,7 +58,7 @@ ControlPopup{
                 CustomComboBox{
                     Layout.alignment: Qt.AlignRight
                     id: wBaCombo
-                    model: ["ATW1", "INDOOR", "OUTDOOR", "ATW2", "ONE_PUSH_TRIGGER"]
+                    model: ["NARROW", "INDOOR", "OUTDOOR", "WIDE", "ONE_PUSH_TRIGGER"]
                     onCurrentTextChanged: {
                         _controllerCore.whiteBalance = currentIndex
                     }

@@ -160,6 +160,7 @@ Rectangle{
                 {
                     quickAlarmsButton.highlighted = false
                     mainviewParent.setAlarmsSliderVisible(false)
+                    mainviewParent.setBlackbodyRectVisible(false)
                 }
             }
         }
@@ -204,6 +205,7 @@ Rectangle{
                 if(quickAlarmsButton.highlighted)
                 {
                     mainviewParent.setManRangeSliderVisible(false)
+                    mainviewParent.setBlackbodyRectVisible(false)
                     quickRangeButton.highlighted = false
                 }
             }
@@ -245,7 +247,10 @@ Rectangle{
                     }
                 }
             }
-            onClicked: _controllerCore.setEthModeOff();
+            onClicked:{
+                _controllerCore.setEthModeOff();
+                showConnectionWindow()
+            }
         }
     }
 }

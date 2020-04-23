@@ -21,11 +21,11 @@ struct Values{
     const QStringList supportedAlarmColors = {"RED", "GREEN", "BLUE", "LIME", "YELLOW", "CYAN", "MAGENTA", "MAROON", "OLIVE", "PURPLE", "TEAL", "NAVY", "BROWN"};
     const std::map<QString, int> alarmColorToIndex = {{"RED", 0}, {"GREEN", 1}, {"BLUE", 2}, {"LIME", 3}, {"YELLOW", 4}, {"CYAN", 5}, {"MAGENTA", 6}, {"MAROON", 7}, {"OLIVE", 8}, {"PURPLE", 9}, {"TEAL", 10},{"NAVY", 11}, {"BROWN", 12}};
 
-    const QStringList supportedGammaModes = {"STANDARD", "STREIGHT", "NARROW", "WIDE"};
-    const std::map<QString, int> gammaModeToIndex = {{"STANDARD", 0}, {"STREIGHT", 1}, {"NARROW", 2}, {"WIDE", 3}};
+    const QStringList supportedGammaModes = {"STANDARD", "STRAIGHT", "NARROW", "WIDE"};
+    const std::map<QString, int> gammaModeToIndex = {{"STANDARD", 0}, {"STRAIGHT", 1}, {"NARROW", 2}, {"WIDE", 3}};
 
-    const QStringList supportedWhiteBalanceModes = {"ATW1", "INDOOR", "OUTDOOR", "ATW2", "ONE_PUSH_TRIGGER"};
-    const std::map<QString, int> whiteBalanceModeToIndex = {{"ATW1", 0}, {"INDOOR", 1}, {"OUTDOOR", 2}, {"ATW2", 3}, {"ONE_PUSH_TRIGGER", 4}};
+    const QStringList supportedWhiteBalanceModes = {"NARROW", "INDOOR", "OUTDOOR", "WIDE", "ONE_PUSH_TRIGGER"};
+    const std::map<QString, int> whiteBalanceModeToIndex = {{"NARROW", 0}, {"INDOOR", 1}, {"OUTDOOR", 2}, {"WIDE", 3}, {"ONE_PUSH_TRIGGER", 4}};
 
     const QStringList supportedExposureModes = {"AUTO", "SHUTTER_PRIORITY", "IRIS_PRIORITY", "MANUAL"};
     const std::map<QString, int> exposureModeToIndex = {{"AUTO", 0}, {"SHUTTER_PRIORITY", 1}, {"IRIS_PRIORITY", 2}, {"MANUAL", 3}};

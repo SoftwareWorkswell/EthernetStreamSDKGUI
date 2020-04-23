@@ -89,7 +89,6 @@ void ThermalThread::drawExtremes()
         paint.fillRect(rectV, QBrush(Qt::red, Qt::SolidPattern));
         paint.fillRect(rectH, QBrush(Qt::red, Qt::SolidPattern));
 
-
         if(*_showMax)
         {
             QFont font=paint.font();
@@ -125,6 +124,7 @@ void ThermalThread::drawExtremes()
             paint.drawText( resize ? drawx-12 : drawx-18, resize ? drawy+17 : drawy+30, QString::number((int)(val*10.0)/10.0) + "°C");
         }
     }
+
     if (_blackbody->show)
     {
         drawx = _blackbody->x - _skipX;// > 2 ? _maximum->x - 2 : _maximum->x;
@@ -136,7 +136,7 @@ void ThermalThread::drawExtremes()
         font.setBold(true);
         paint.setFont(font);
         paint.setPen("yellow");
-        paint.drawEllipse(QPoint(drawx, drawy), 25, 25);
+        paint.drawEllipse(QPoint(drawx, drawy), 17, 17);
         resize ? font.setPointSize(7) : font.setPointSize(16);
         paint.setFont(font);
         paint.setPen(Qt::white);

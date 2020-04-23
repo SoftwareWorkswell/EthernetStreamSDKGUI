@@ -101,6 +101,7 @@ class ControllerCore : public QObject
     Q_PROPERTY(QString mainCamera READ mainCamera WRITE setMainCamera NOTIFY mainCameraChanged)
     Q_PROPERTY(double levelOfAcception READ levelOfAcception WRITE setLevelOfAcception NOTIFY levelOfAcceptionChanged)
     Q_PROPERTY(int blackbodyRoiX READ blackbodyRoiX WRITE setBlackbodyRoiX NOTIFY blackbodyRoiXChanged)
+    // blackbody coordinates in an app, use the confirm button to set coordinates to camera and refresh calibration
     Q_PROPERTY(int blackbodyRoiY READ blackbodyRoiY WRITE setBlackbodyRoiY NOTIFY blackbodyRoiYChanged)
     // palettes
     Q_PROPERTY(double paletteBottom READ paletteBottom NOTIFY paletteBottomChanged)
@@ -167,6 +168,9 @@ public slots:
     void setCurrentPaletteByIndex(int i);
     void setCurrentPaletteByName(int i);
     void setVisibleCameraDefaults();
+    // sync blackbody position to camera
+    void sendBlackbodyCoordinates();
+    void fetchBlackbodyCoordinates();
 
 signals:
     //signals indicating which MEDICAS states has just changed

@@ -2,7 +2,6 @@
 
 void VisibleThread::run()
 {
-
 #ifdef _WIN32
     std::string latency = "3000";
     std::string addr(("rtspsrc location=rtsp://" + this->_ssrc.toStdString() + ":8554/visible latency=" + latency + " ! rtph264depay ! avdec_h264 ! videoconvert ! appsink"));

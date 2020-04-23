@@ -36,77 +36,30 @@ ControlPopup{
         PopupCheckBox{
             text: "Show Blackbody ROI"
             checked: false
-            visible: _controllerCore.type != mainWindow.securityType
+            visible: true
             enabled: true
+            id: showBlackbodyCheck
             onCheckedChanged: _controllerCore.showBlackbodyRoi = checked
         }
-        RowLayout{
-            Layout.fillWidth: true
-            Layout.margins: 5
-            Text{
-                Layout.alignment: Qt.AlignLeft
-                Layout.fillWidth: true
-                color: "white"
-                font.pixelSize: 12
-                text: "Blackbody X: "
-                font.bold: true
-            }
-            Rectangle{
-                id: blackbodyXBackground
-                Layout.preferredHeight: 20
-                Layout.preferredWidth: 120
-                SpinBox {
-                    anchors.fill: parent
-                    id:  blackbodyXValue
-                    value: parseInt(_controllerCore.blackbodyRoiX)
-                    font.bold: true
-                    //validator: RegExpValidator { regExp: /^0\.\d\d/}
-                    onValueModified: {
-                        _controllerCore.blackbodyRoiX = value
-                    }
-                }
-                Connections{
-                    target: _controllerCore
-                    onBlackbodyRoiXChanged: {
-                         blackbodyXValue.value = _controllerCore.blackbodyRoiX
-                    }
+        RowLayout {
+            Layout.preferredHeight: 50
+            Layout.alignment: Qt.AlignHCenter
+            PopupButton{
+                width: parent.width * 0.65
+                height: parent.height * 0.55
+                anchors.centerIn: parent
+                text: "Set Position"
+                onClicked:{
+                    showBlackbodyCheck.checked = true
+                    mainviewParent.setBlackbodyRectVisible(true)
+                    mainviewParent.setAlarmsSliderVisible(false)
+                    mainviewParent.setManRangeSliderVisible(false)
+                    controlPanel.hideAllPopups()
+
                 }
             }
         }
 
-        RowLayout{
-            Layout.fillWidth: true
-            Layout.margins: 5
-            Text{
-                Layout.alignment: Qt.AlignLeft
-                Layout.fillWidth: true
-                color: "white"
-                font.pixelSize: 12
-                text: "Blackbody Y: "
-                font.bold: true
-            }
-            Rectangle{
-                id: blackbodyYBackground
-                Layout.preferredHeight: 20
-                Layout.preferredWidth: 120
-                SpinBox {
-                    anchors.fill: parent
-                    id:  blackbodyYValue
-                    to: 511
-                    editable: true
-                    value: parseInt(_controllerCore.blackbodyRoiX)
-                    onValueModified: {
-                        _controllerCore.blackbodyRoiY = value
-                    }
-                }
-                Connections{
-                    target: _controllerCore
-                    onBlackbodyRoiYChanged: {
-                         blackbodyYValue.value = _controllerCore.blackbodyRoiY
-                    }
-                }
-            }
-        }
         PopupItem{
 
             width: parent.width
@@ -206,7 +159,7 @@ ControlPopup{
                 Connections{
                     target: _controllerCore
                     onAlarmPreventiveChanged: {
-                        alarmPreventiveValue.text = _controllerCore.alarmPreventive
+                        alarmPreventiveValue.text = _controllerCore.alarmPreventive.toFixed(2)
                     }
                 }
             }
@@ -240,7 +193,7 @@ ControlPopup{
                 Connections{
                     target: _controllerCore
                     onAlarmCriticalChanged: {
-                        alarmCriticalValue.text = _controllerCore.alarmCritical
+                        alarmCriticalValue.text = _controllerCore.alarmCritical.toFixed(2)
                     }
                 }
             }
@@ -310,7 +263,8 @@ ControlPopup{
                 }
                 onCriticalColorChanged:{
                     colorCriticalComboBox.skipHandler = true
-                    console.log('critical col ' + val)
+                    var idx = colorCriticalComboBox.model.indexOf(val)
+                    console.log('critical col ' + idx  + " " + val)
                     colorCriticalComboBox.currentIndex = colorCriticalComboBox.model.indexOf(val)
                 }
             }

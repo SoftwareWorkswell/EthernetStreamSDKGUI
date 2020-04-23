@@ -60,6 +60,10 @@ Rectangle {
     {
         quickAlarmsRect.visible = visible
     }
+    function setBlackbodyRectVisible(visible)
+    {
+        quickBlackbodyRect.visible = visible
+    }
 
     Image{
         id: mainView
@@ -231,5 +235,109 @@ Rectangle {
             id: quickAlarmSlider
             anchors.fill: parent
         }
+    }
+    Rectangle{
+        id: quickBlackbodyRect
+        visible: false
+        height: 42
+        width: parent.width
+        anchors.bottom: parent.bottom
+        anchors.left: parent.left
+        color: "#DD444444"
+        Rectangle{
+            color: "transparent"
+            Layout.preferredHeight: 40
+            Layout.preferredWidth: parent.width
+            RowLayout
+            {
+                anchors.fill: parent
+                RowLayout{
+                    Layout.fillWidth: true
+                    Layout.margins: 5
+                    Text{
+                        Layout.alignment: Qt.AlignLeft
+                        color: "white"
+                        font.pixelSize: 12
+                        text: "X: "
+                        font.bold: true
+                    }
+                    Rectangle{
+                        id: blackbodyXBackground
+                        Layout.preferredHeight: 20
+                        Layout.preferredWidth: 120
+                        SpinBox {
+                            anchors.fill: parent
+                            id:  blackbodyXValue
+                            value: parseInt(_controllerCore.blackbodyRoiX)
+                            font.bold: true
+                            to: 639
+                            editable: true
+                            //validator: RegExpValidator { regExp: /^0\.\d\d/}
+                            onValueModified: {
+                                _controllerCore.blackbodyRoiX = value
+                            }
+                        }
+                        Connections{
+                            target: _controllerCore
+                            onBlackbodyRoiXChanged: {
+                                 blackbodyXValue.value = _controllerCore.blackbodyRoiX
+                            }
+                        }
+                    }
+                }
+
+                RowLayout{
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
+                    Layout.margins: 5
+                    Text{
+                        Layout.alignment: Qt.AlignLeft
+                        color: "white"
+                        font.pixelSize: 12
+                        text: "Y: "
+                        font.bold: true
+                    }
+                    Rectangle{
+                        id: blackbodyYBackground
+                        Layout.preferredHeight: 20
+                        Layout.preferredWidth: 120
+                        SpinBox {
+                            anchors.fill: parent
+                            id:  blackbodyYValue
+                            font.bold: true
+                            to: 511
+                            editable: true
+                            value: parseInt(_controllerCore.blackbodyRoiX)
+                            onValueModified: {
+                                _controllerCore.blackbodyRoiY = value
+                            }
+                        }
+                        Connections{
+                            target: _controllerCore
+                            onBlackbodyRoiYChanged: {
+                                 blackbodyYValue.value = _controllerCore.blackbodyRoiY
+                            }
+                        }
+                    }
+                }
+                RowLayout {
+                    Layout.fillHeight: true
+                    PopupButton{
+                        text: "Confirm"
+                        onClicked: _controllerCore.sendBlackbodyCoordinates()
+                    }
+                }
+                RowLayout {
+                    Layout.fillHeight: true
+                    PopupButton{
+                        text: "Hide"
+                        onClicked:{
+                            _controllerCore.fetchBlackbodyCoordinates()
+                            setBlackbodyRectVisible(false)
+                        }
+                    }
+                }
+            }
+       }
     }
 }

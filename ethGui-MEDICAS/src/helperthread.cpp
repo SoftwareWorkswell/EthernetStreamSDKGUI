@@ -218,10 +218,11 @@ void HelperThread::loadExtremes(std::istringstream& max_iss, std::istringstream&
     std::getline(line, cache);
     _center->val = stod(cache);
 
+    // edit - do not fetch blackbody pos
     std::getline(blackbody_iss, cache, ' ');
-    _blackbody->x = QString::fromStdString(cache).toInt();
+   // _blackbody->x = QString::fromStdString(cache).toInt();
     std::getline(blackbody_iss, cache, ' ');
-    _blackbody->y = QString::fromStdString(cache).toInt();
+  //  _blackbody->y = QString::fromStdString(cache).toInt();
     getAnyLine(blackbody_iss, cache);
     _blackbody->val = QString::fromStdString(cache).toDouble();
     emit extremesChanged();

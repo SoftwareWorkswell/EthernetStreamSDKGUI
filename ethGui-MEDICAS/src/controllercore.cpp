@@ -592,7 +592,6 @@ void ControllerCore::fetchLevelofAcceptance()
         _params._levelOfAcception = level;
         emit levelOfAcceptionChanged(_params._levelOfAcception);
     }
-    this->_params._firmwareVersion = QString::fromStdString(cache);
 }
 
 void ControllerCore::fetchBlacbodyRoi()
@@ -656,7 +655,6 @@ void ControllerCore::fetchPalettes(){
         getAnyLine(iss, cache);
         this->_params._currentPalette = QString::fromStdString(cache);
         this->_params._currentPalette = this->_params._currentPalette.split(" ")[1];
-        qDebug() << QString::fromStdString(cache) << _params._currentPalette;
         send(_protocol.prepareMessage(_protocol.set_palette_by_name, _params._currentPalette));
     }
 
@@ -805,9 +803,9 @@ void ControllerCore::fetchAlarms()
         _params._preventiveColor = QString::fromStdString(cache);
         emit preventiveColorChanged(_params._preventiveColor);
         std::getline(iss, cache,' ');
-        qDebug() << "cache" << QString::fromStdString(cache);
-
         _params._criticalColor = QString::fromStdString(cache);
+        _params._criticalColor = _params._criticalColor.remove(_params._criticalColor.indexOf('\r', 0), _params._criticalColor.length() - _params._criticalColor.indexOf('\r'));
+        qDebug() << _params._criticalColor;
         emit criticalColorChanged(_params._criticalColor);
     }
 
@@ -889,7 +887,7 @@ void ControllerCore::fetchGamma() {
     {
         std::string resp;
         getAnyLine(iss, resp);
-        _params._iris = _vals.gammaModeToIndex.find(QString::fromStdString(resp))->second;
+        _params._gamma = _vals.gammaModeToIndex.find(QString::fromStdString(resp))->second;
         emit gammaChanged(_params._gamma);
     }
 }
@@ -900,7 +898,7 @@ void ControllerCore::fetchWhiteBalance() {
     {
         std::string resp;
         getAnyLine(iss, resp);
-        _params._iris = _vals.whiteBalanceModeToIndex.find(QString::fromStdString(resp))->second;
+        _params._whiteBalance = _vals.whiteBalanceModeToIndex.find(QString::fromStdString(resp))->second;
         emit whiteBalanceChanged(_params._whiteBalance);
     }
 }
@@ -1016,12 +1014,12 @@ double ControllerCore::levelOfAcception() const
 
 int ControllerCore::blackbodyRoiX() const
 {
-    return this->_params._blackbodyRoiX;
+    return this->_params._blackbody->x;
 }
 
 int ControllerCore::blackbodyRoiY() const
 {
-    return this->_params._blackbodyRoiY;
+    return this->_params._blackbody->y;
 }
 
 void ControllerCore::setManualRange1(const QString& val)
@@ -1105,26 +1103,31 @@ void ControllerCore::setBlackbodyRoiX(int val)
 {
     if(val < 0)
         return;
-    std::istringstream iss;
-    if(send(_protocol.prepareMessage(_protocol.set_blackbody_roi, QString::number(val) + " " + QString::number(_params._blackbodyRoiY)), iss) && isPositive(iss.str()))
-    {
-        _params._blackbodyRoiX = val;
-        _params._blackbody->x = _params._blackbodyRoiX;
-        emit blackbodyRoiXChanged(_params._blackbodyRoiX);
-    }
+    _params._blackbody->x = val;
+     emit blackbodyRoiXChanged(_params._blackbodyRoiX);
 }
 
 void ControllerCore::setBlackbodyRoiY(int val)
 {
     if(val < 0)
         return;
+    _params._blackbody->y = val;
+    emit blackbodyRoiYChanged(_params._blackbodyRoiY);
+}
+
+void ControllerCore::sendBlackbodyCoordinates()
+{
     std::istringstream iss;
-    if(send(_protocol.prepareMessage(_protocol.set_blackbody_roi, QString::number(_params._blackbodyRoiX) + " " + QString::number(val)), iss) && isPositive(iss.str()))
+    if(send(_protocol.prepareMessage(_protocol.set_blackbody_roi, QString::number(_params._blackbody->x) + " " + QString::number(_params._blackbody->y)), iss) && isPositive(iss.str()))
     {
-        _params._blackbodyRoiY = val;
-        _params._blackbody->y = _params._blackbodyRoiY;
-        emit blackbodyRoiYChanged(_params._blackbodyRoiY);
+        _params._blackbodyRoiX = _params._blackbody->x;
+        _params._blackbodyRoiY = _params._blackbody->y;
+
     }
+}
+void ControllerCore::fetchBlackbodyCoordinates()
+{
+    fetchBlacbodyRoi();
 }
 
 // in medicas alarm mode is just ON/OFF

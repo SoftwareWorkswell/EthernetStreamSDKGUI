@@ -293,7 +293,7 @@ Rectangle{
                                     if (_controllerCore.alarmMode == 0)
                                         sideAlarmText.text = "OFF";
                                     else
-                                        sideAlarmText.text = "P: " + Math.round(rangeAlarmSlider.first.value*10)/10 + " C:" + Math.round(rangeAlarmSlider.second.value*10)/10 + "°C";
+                                        sideAlarmText.text = "ON";
 
                                 }
                                 color: "white"
@@ -494,9 +494,9 @@ Rectangle{
                 Image{
                     anchors.horizontalCenter: parent.horizontalCenter
                     y: 5
-                    source: _controllerCore.type == mainWindow.securityType ? "/img/png/logo_workswell_wws.png" : "/img/png/logo_workswell_wwp.png"
+                    source: "/img/png/logo-workswell.png"
                     fillMode: Image.PreserveAspectFit
-                    height: 30
+                    height: 20
                 }
             }
         }
