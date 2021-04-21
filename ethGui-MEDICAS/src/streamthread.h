@@ -2,8 +2,8 @@
 #define STREAMTHREAD_H
 
 
-#include <qobject.h>
-#include <qthread.h>
+#include <QObject>
+#include <QThread>
 #include <QString>
 
 #include <memory>
@@ -19,12 +19,13 @@ public:
 
 signals:
     void imageSourceChanged();
+    void disconnected();
 
 protected:
     virtual void run() = 0;
 
-    QString _ssrc;
-    bool* _stream;
+    QString _ssrc{};
+    bool *_stream{};
 };
 
 

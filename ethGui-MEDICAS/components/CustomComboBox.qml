@@ -7,7 +7,6 @@ ComboBox {
 
     property string customBackground: "white"
 
-
     delegate: ItemDelegate {
         width: control.width
         contentItem: Text {
@@ -32,7 +31,9 @@ ComboBox {
 
         Connections {
             target: control
-            onPressedChanged: canvas.requestPaint()
+            function onPressedChanged(){
+                canvas.requestPaint()
+            }
         }
 
         onPaint: {

@@ -125,8 +125,6 @@
         <file>components/ZoomSpinBox.qml</file>
         <file>components/CustomComboBox.qml</file>
         <file>components/ManualRangeSlider.qml</file>
-        <file>components/ManualRangeSliderQuick.qml</file>
-        <file>components/InfoPanel.qml</file>
         <file>components/popups/AdvancedPopup.qml</file>
         <file>components/popups/MeasurePopup.qml</file>
         <file>components/popups/RangePopup.qml</file>
@@ -139,5 +137,34 @@
         <file>components/panels/QuickMenuPanel.qml</file>
         <file>components/panels/RightPanel.qml</file>
         <file>components/AlarmsSliderQuick.qml</file>
+        <file>components/advanced_dropdowns/VisibleDropDown.qml</file>
+        <file>components/advanced_dropdowns/ImgVidDropDown.qml</file>
+        <file>components/advanced_dropdowns/InfoDropDown.qml</file>
+        <file>components/advanced_dropdowns/SystemDropDown.qml</file>
+        <file>components/advanced_dropdowns/UserDropDown.qml</file>
+        <file>components/advanced_dropdowns/MemoryDropDown.qml</file>
+        <file>components/advanced_dropdowns/AlarmsDropDown.qml</file>
+        <file>components/advanced_dropdowns/ROIDropDown.qml</file>
+        <file>components/advanced_dropdowns/DIODropDown.qml</file>
+        <file>components/advanced_dropdowns/user_settings_dialogs/UserLoginDialog.qml</file>
+        <file>components/advanced_dropdowns/user_settings_dialogs/ChangePasswordDialog.qml</file>
+        <file>components/advanced_dropdowns/user_settings_dialogs/ChangeSettingsDialog.qml</file>
+        <file>components/advanced_dropdowns/user_settings_dialogs/ChangeSystemTimeDialog.qml</file>
+        <file>components/BlackbodyErrorMessage.qml</file>
+        <file>components/SeparateWindow.qml</file>
+        <file>components/positioners/BlackbodyPositionForm.qml</file>
+        <file>components/positioners/UserRoiPositionForm.qml</file>
+        <file>components/positioners/UserCrossPositionForm.qml</file>
+        <file>img/png/busy2.png</file>
+        <file>components/advanced_dropdowns/user_settings_dialogs/SetRoiNamesDialog.qml</file>
+        <file>img/icon.png</file>
+        <file>components/RangeErrorDialog.qml</file>
+        <file>components/CameraDisconnectedMessage.qml</file>
+        <file>components/AlarmErrorDialog.qml</file>
+        <file>translations/ts_cz.ts</file>
+        <file>translations/ts_cz.qm</file>
+        <file>components/CrossUserErrorMessage.qml</file>
+        <file>components/RoiUserErrorMessage.qml</file>
+        <file>components/HeatingUpMessage.qml</file>
     </qresource>
 </RCC>

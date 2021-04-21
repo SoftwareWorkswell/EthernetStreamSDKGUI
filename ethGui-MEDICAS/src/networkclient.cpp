@@ -53,8 +53,18 @@ void NetworkClient::disconnect()
 
     boost::system::error_code ec;
     socket->shutdown(boost::asio::ip::tcp::socket::shutdown_both, ec);
+
+
     socket->close(ec);
+    resolver->cancel();
     io_context->stop();
+
+    socket = nullptr;
+    resolver = nullptr;
+    io_context = nullptr;
+
+    host.clear();
+    port.clear();
     connected = false;
 }
 
@@ -68,7 +78,7 @@ int NetworkClient::write(const uint8_t *buffer, std::size_t size)
         return -1;
     }
 
-    return length;
+    return (int)length;
 }
 
 int NetworkClient::write(const std::string &buffer)
@@ -82,9 +92,9 @@ int NetworkClient::wait(std::chrono::steady_clock::duration timeout)
 
     socket->async_wait(boost::asio::ip::tcp::socket::wait_read,
                        [&](const boost::system::error_code& result_error)
-                       {
-                           ec = result_error;
-                       });
+    {
+        ec = result_error;
+    });
 
     bool timedout = run_for(timeout);
 
@@ -109,7 +119,7 @@ int NetworkClient::available()
         return -1;
     }
 
-    return available;
+    return (int)available;
 }
 
 int NetworkClient::read_some(uint8_t *buffer, std::size_t size)
@@ -129,11 +139,11 @@ int NetworkClient::read_some(uint8_t *buffer, std::size_t size)
 
         std::size_t length = boost::asio::read(*socket, boost::asio::buffer(buffer, available), ec);
         if (ec) {
-           // std::cout << __PRETTY_FUNCTION__ << ": " << ec.message() << std::endl;
+            // std::cout << __PRETTY_FUNCTION__ << ": " << ec.message() << std::endl;
             return -1;
         }
 
-        return length;
+        return (int)length;
     }
 
     return 0;
@@ -145,11 +155,11 @@ int NetworkClient::read_some_wait(uint8_t *buffer, std::size_t size)
 
     std::size_t length = socket->read_some(boost::asio::buffer(buffer, size), ec);
     if (ec) {
-       // std::cout << __PRETTY_FUNCTION__ << ": " << ec.message() << std::endl;
+        // std::cout << __PRETTY_FUNCTION__ << ": " << ec.message() << std::endl;
         return -1;
     }
 
-    return length;
+    return (int)length;
 }
 
 int NetworkClient::read_exactly(uint8_t *buffer, std::size_t size, std::chrono::steady_clock::duration timeout)
@@ -158,10 +168,10 @@ int NetworkClient::read_exactly(uint8_t *buffer, std::size_t size, std::chrono::
     std::size_t n = 0;
     boost::asio::async_read(*socket, boost::asio::buffer(buffer, size),
                             [&](const boost::system::error_code& result_error, std::size_t result_n)
-                            {
-                                ec = result_error;
-                                n = result_n;
-                            });
+    {
+        ec = result_error;
+        n = result_n;
+    });
 
     bool timedout = run_for(timeout);
 
@@ -170,7 +180,7 @@ int NetworkClient::read_exactly(uint8_t *buffer, std::size_t size, std::chrono::
         return -1;
     }
 
-    return n;
+    return (int)n;
 }
 
 int NetworkClient::read_until(std::string &buffer, char delim, std::chrono::steady_clock::duration timeout)
@@ -179,19 +189,19 @@ int NetworkClient::read_until(std::string &buffer, char delim, std::chrono::stea
     std::size_t n = 0;
     boost::asio::async_read_until(*socket, boost::asio::dynamic_buffer(buffer), delim,
                                   [&](const boost::system::error_code& result_error, std::size_t result_n)
-                                  {
-                                      ec = result_error;
-                                      n = result_n;
-                                  });
+    {
+        ec = result_error;
+        n = result_n;
+    });
 
     bool timedout = run_for(timeout);
 
     if (!timedout && ec) {
-       // std::cout << __PRETTY_FUNCTION__ << ": " << ec.message() << std::endl;
+        // std::cout << __PRETTY_FUNCTION__ << ": " << ec.message() << std::endl;
         return -1;
     }
 
-    return n;
+    return (int)n;
 }
 
 bool NetworkClient::run_for(std::chrono::steady_clock::duration timeout)

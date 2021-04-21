@@ -2,57 +2,147 @@ import QtQuick 2.0
 import QtQuick.Layouts 1.12
 import QtQuick.Controls 2.12
 
-Rectangle{
+Rectangle {
     color: "transparent"
-    visible: rangeModeMan.checked
     Layout.preferredHeight: 40
-    Layout.preferredWidth: parent.width
+    Layout.preferredWidth: parent.width - 10
+    Layout.alignment: Qt.AlignHCenter
 
-    Text {
-        anchors.left: parent.left
-        width: parent.width*1/6
+    function setFirstVal(val) {
+        rangeManSlider.first.value = val
+        rangeFirstDebounceTimer.stop()
+        rangeFirstDebounceTimer.start()
+    }
+
+    function setSecondVal(val) {
+        rangeManSlider.second.value = val
+        rangeSecondDebounceTimer.stop()
+        rangeSecondDebounceTimer.start()
+    }
+
+    property alias from: rangeManSlider.from
+    property alias to: rangeManSlider.to
+    property alias firstVal: rangeManSlider.fVal
+    property alias secondVal: rangeManSlider.sVal
+
+    TextField {
         id: sliderFrom
+        anchors.left: parent.left
+        width: parent.width * 1 / 6
         color: "orange"
-        height: parent.height
+        background: Rectangle {
+            color: "#66000000"
+            border.color: "orange"
+            border.width: 1
+        }
+        height: 30
+        y: 5
+        //validator: RegExpValidator { regExp: /^[+-]?(\d)+\.\d/}
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
-        text:  Math.round(quickManSlider.first.value*10)/10+ " °C"
+        visible: rangeManSlider.visible
+        text: rangeManSlider.first.value.toFixed(2)
+        onTextChanged: {
+            if (+sliderFrom.text === Math.round(
+                        rangeManSlider.first.value * 100) / 100) {
+                sliderFrom.color = "orange"
+                return
+            }
+            if (+sliderFrom.text < +sliderTo.text
+                    && +sliderFrom.text >= rangeManSlider.from
+                    && sliderFrom.text != "") {
+                rangeManSlider.first.value = sliderFrom.text
+                sliderFrom.color = "orange"
+            } else
+                sliderFrom.color = "red"
+        }
     }
 
     RangeSlider {
-        id: quickManSlider
+        id: rangeManSlider
+
+        property double fVal: rangeManSlider.first.value
+        property double sVal: rangeManSlider.second.value
+
         anchors.left: sliderFrom.right
-        width: parent.width*2/3
-        from: 35.0
-        to: 50.0
-        first.value: _controllerCore.alarmPreventive()
-        second.value: _controllerCore.alarmCritical()
-        first.onMoved: _controllerCore.alarmPreventive = first.value.toFixed(2)
-        second.onMoved: _controllerCore.alarmCritical = second.value.toFixed(2)
+        width: parent.width * 2 / 3
+        from: _controllerCore._controllerCore.getAlarmMinLimit()
+        to: _controllerCore._controllerCore.getAlarmMaxLimit()
+        first.value: _controllerCore.alarmPreventive
+        second.value: _controllerCore.alarmCritical
 
-    }
-    Connections{
-        target: _controllerCore
-        onAlarmPreventiveChanged:{
-            quickManSlider.first.value = val
+        Connections {
+            target: rangeManSlider.first
+            function onValueChanged() {
+                rangeFirstDebounceTimer.stop()
+                rangeFirstDebounceTimer.start()
+            }
+        }
+        Connections {
+            target: rangeManSlider.second
+            function onValueChanged() {
+                rangeSecondDebounceTimer.stop()
+                rangeSecondDebounceTimer.start()
+            }
+        }
+
+        Connections {
+            target: _controllerCore
+            function onAlarmPreventiveChanged(val) {
+                rangeManSlider.first.value = val
+            }
+            function onAlarmCriticalChanged(val) {
+                rangeManSlider.second.value = val
+            }
+            function onUnitsChanged(val) {
+                rangeManSlider.from = _controllerCore.getAlarmMinLimit()
+                rangeManSlider.to = _controllerCore.getAlarmMaxLimit()
+            }
+        }
+        Timer {
+            id: rangeFirstDebounceTimer
+            interval: 500
+            repeat: false
+            onTriggered: _controllerCore.alarmPreventive = rangeManSlider.first.value
+        }
+        Timer {
+            id: rangeSecondDebounceTimer
+            interval: 500
+            repeat: false
+            onTriggered: _controllerCore.alarmCritical = rangeManSlider.second.value
         }
     }
-    Connections{
-        target: _controllerCore
-        onAlarmCriticalChanged:{
-            quickManSlider.second.value = val
-        }
-    }
 
-    Text {
-        anchors.left: quickManSlider.right
-        width: parent.width*1/6
+    TextField {
         id: sliderTo
+        anchors.left: rangeManSlider.right
+        width: parent.width * 1 / 6
         color: "orange"
-        height: parent.height
+        background: Rectangle {
+            color: "#66000000"
+            border.color: "orange"
+            border.width: 1
+        }
+        height: 30
+        y: 5
+        //validator: RegExpValidator { regExp: /^[+-]?(\d)+\.\d/}
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
-        text: Math.round(quickManSlider.second.value*10)/10+ " °C"
+        visible: rangeManSlider.visible
+        text: Math.round(rangeManSlider.second.value * 100) / 100
+        onTextChanged: {
+            if (+sliderTo.text === Math.round(
+                        rangeManSlider.second.value * 100) / 100) {
+                sliderTo.color = "orange"
+                return
+            }
+            if (+sliderFrom.text < +sliderTo.text
+                    && +sliderTo.text <= rangeManSlider.to
+                    && sliderTo.text != "") {
+                rangeManSlider.second.value = sliderTo.text
+                sliderTo.color = "orange"
+            } else
+                sliderTo.color = "red"
+        }
     }
-
 }

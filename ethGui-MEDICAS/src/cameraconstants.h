@@ -21,6 +21,7 @@ struct CameraConstants
     // alarm graphic setting
     const int _maxAlarmOpacity = 100;
     const int _minAlarmOpacity = 50;
+
 };
 
 #endif // CAMERACONSTANTS_H

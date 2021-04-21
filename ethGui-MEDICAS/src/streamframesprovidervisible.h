@@ -1,26 +1,16 @@
 #ifndef STREAMFRAMESPROVIDERVISIBLE_H
 #define STREAMFRAMESPROVIDERVISIBLE_H
 
-
-#include <QQuickImageProvider>
 #include <QDebug>
+#include <QImage>
+#include <QQuickImageProvider>
 
-extern QImage *streamFrameVisible;
+extern QImage streamFrameVisible;
 
-
-class StreamFramesProviderVisible : public QQuickImageProvider
-{
+class FramesProvider : public QQuickImageProvider {
 public:
-    StreamFramesProviderVisible()
-        : QQuickImageProvider(QQmlImageProviderBase::Image)
-{
-}
-
-    QImage requestImage(const QString &id, QSize *size, const QSize &requestedSize) override
-    {
-     //qDebug() << "requestImageVisible";
-     return *streamFrameVisible;
-    }
+    FramesProvider() : QQuickImageProvider(QQmlImageProviderBase::Image) {}
+    QImage requestImage(const QString &, QSize *, const QSize &) override { return streamFrameVisible; }
 };
 
 #endif // STREAMFRAMESPROVIDERVISIBLE_H

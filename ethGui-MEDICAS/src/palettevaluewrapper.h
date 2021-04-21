@@ -12,7 +12,7 @@ class PaletteValueWrapper : public QObject
         Q_PROPERTY(QString g READ g CONSTANT)
         Q_PROPERTY(QString b READ b CONSTANT)
 public:
-    PaletteValueWrapper (QObject * parent = nullptr){}
+    PaletteValueWrapper (QObject * parent = nullptr): QObject(parent){}
     PaletteValueWrapper (const QString & r, const QString & g, const QString & b, QObject * parent = nullptr) : QObject(parent), m_r(r), m_g(g), m_b(b){}
 
     QString r() const

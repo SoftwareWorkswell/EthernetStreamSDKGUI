@@ -7,7 +7,6 @@ CheckBox {
     checked: true
     font.bold: true
     font.pixelSize: 12
-
     indicator: Rectangle {
         implicitWidth: 16
         implicitHeight: 16

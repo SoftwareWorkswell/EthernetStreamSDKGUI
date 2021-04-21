@@ -2,13 +2,14 @@
 
 void VisibleThread::run()
 {
+    this->setPriority(Priority::HighestPriority);
 #ifdef _WIN32
-    std::string latency = "3000";
+    std::string latency = "250";
     std::string addr(("rtspsrc location=rtsp://" + this->_ssrc.toStdString() + ":8554/visible latency=" + latency + " ! rtph264depay ! avdec_h264 ! videoconvert ! appsink"));
     cv::VideoCapture cap(addr, cv::CAP_GSTREAMER);
     if(!cap.isOpened())
     {
-        qDebug() << "visible: Input error";
+        qDebug() << "Visible: Input error";
         *_stream = false;
         return;
     }
@@ -24,26 +25,38 @@ void VisibleThread::run()
 
     if(!cap.isOpened())
     {
-        qDebug() << "visible: Input error";
+        qDebug() << "Visible: Input error";
         *_stream = false;
         return;
     }
 
     cv::Mat frame;
-
+    qDebug() << "Visible thread started";
     while(*_stream)
     {
         cap >> frame;
+
         if (frame.empty())
         {
-            qDebug() << "visible: empty frame occurance, stopping stream!";
+            emit disconnected();
+            qDebug() << "Visible: empty frame occurance, stopping stream!";
             break;
         }
 
-        cv::cvtColor(frame, frame,cv::ColorConversionCodes::COLOR_BGR2RGB);
-        streamFrameVisible = new QImage((uchar*) frame.data, frame.cols, frame.rows, frame.step, QImage::Format_RGB888);
-        emit imageSourceChanged();
+        cv::cvtColor(frame, frame, cv::ColorConversionCodes::COLOR_BGR2RGB);
+        // if(streamFrameVisible)
+        // streamFrameVisible = new QImage((uchar *)tempFrame.data, (int)tempFrame.cols, (int)tempFrame.rows, (int)tempFrame.step, QImage::Format_RGB888);
+        static uchar *data = nullptr;
+        if (!data) {
+            data = new uchar[frame.rows * frame.step];
+        }
+        memcpy(data, frame.data, frame.rows * frame.step);
+
+        streamFrameVisible = QImage(data, frame.cols, frame.rows, frame.step, QImage::Format_RGB888).copy();
+        if (*_stream)
+            emit imageSourceChanged();
     }
-    cap.release();
     *_stream = false;
+    cap.release();
+    qDebug() << "Visible thread finished";
 }

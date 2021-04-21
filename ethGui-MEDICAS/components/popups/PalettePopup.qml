@@ -7,23 +7,21 @@ import QtQuick.Controls.Styles 1.4
 import QtQuick.Layouts 1.3
 import "../"
 
-ControlPopup{
+ControlPopup {
     id: palettePopup
     width: parent.width
 
-    ColumnLayout{
+    ColumnLayout {
         width: parent.width
         height: parent.height
 
-        PopupItem{
-
+        PopupItem {
             width: parent.width
-            itemText: "Palettes"
+            itemText: qsTr("Palettes") + _translator.emptyString
             Layout.preferredHeight: 25
         }
 
-
-        Component{
+        Component {
             id: paletteDelegate
             PaletteButton {
                 id: delegateButton
@@ -40,10 +38,10 @@ ControlPopup{
 
             model: _controllerCore.palettes
             delegate: paletteDelegate
-            Connections{
+            Connections {
                 target: _controllerCore
-                onPalettesChanged: {
-                    palettesListView.model = _controllerCore.palettes;
+                function onPalettesChanged() {
+                    palettesListView.model = _controllerCore.palettes
                 }
             }
         }

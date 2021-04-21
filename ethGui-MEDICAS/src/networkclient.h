@@ -1,7 +1,6 @@
 #ifndef NETWORKCLIENT_H
 #define NETWORKCLIENT_H
 
-
 #include <cstdint>
 #include <string>
 #include <memory>
@@ -48,13 +47,13 @@ public:
 
 protected:
     bool connected = false;
-    std::string host;
-    std::string port;
+    std::string host{};
+    std::string port{};
     bool debug = false;
 
-    std::shared_ptr<boost::asio::io_context> io_context;
-    std::unique_ptr<boost::asio::ip::tcp::resolver> resolver;
-    std::unique_ptr<boost::asio::ip::tcp::socket> socket;
+    std::shared_ptr<boost::asio::io_context> io_context = nullptr;
+    std::unique_ptr<boost::asio::ip::tcp::resolver> resolver = nullptr;
+    std::unique_ptr<boost::asio::ip::tcp::socket> socket = nullptr;
 
     bool run_for(std::chrono::steady_clock::duration timeout); /// Run operation with timeout
     bool run_until(const std::chrono::steady_clock::time_point &timepoint); /// Run operation until timepoint

@@ -10,9 +10,8 @@ class PaletteWrapper : public QObject
         Q_OBJECT
         Q_PROPERTY(QString value READ value CONSTANT)
 public:
-    PaletteWrapper (QObject * parent = nullptr){}
+    PaletteWrapper (QObject * parent = nullptr): QObject(parent){}
     PaletteWrapper (const QString & x, QObject * parent = nullptr) : QObject(parent), m_value(x){}
-
     QString value() const
     {
         return m_value;

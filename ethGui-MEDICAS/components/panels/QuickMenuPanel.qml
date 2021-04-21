@@ -8,6 +8,18 @@ import QtQuick.Layouts 1.3
 import "../"
 
 Rectangle{
+    function toggleCaptureClick(){
+        quickCaptureButton.onClicked();
+    }
+
+    function disableHighlights()
+    {
+        quickRangeButton.highlighted = false;
+        quickAlarmsButton.highlighted = false;
+    }
+
+    property bool recordingEnabled: false
+    property bool captureEnabled: false
     Rectangle{
         id: quickMenuRect
         width: controlPanel.width
@@ -16,7 +28,7 @@ Rectangle{
         Text{
             font.bold: true
             anchors.centerIn: parent
-            text: "Quick\nMenu"
+            text: qsTr("Quick\nMenu") + _translator.emptyString
             color: "white"
         }
         gradient: Gradient {
@@ -50,8 +62,9 @@ Rectangle{
                     Text {
                         id: quickCaptureText
                         property bool capturing
-                        text: "Capture"
-                        color: quickCaptureText.capturing ? "red" : (quickCaptureButton.hovered ? "orange" : "white")
+                        text: qsTr("Capture") + _translator.emptyString
+                        enabled: captureEnabled
+                        color:  enabled ? (quickCaptureText.capturing ? "red" : (quickCaptureButton.hovered ? "orange" : "white")) : "gray"
                         font.bold: true
                         x: 5
                         font.pixelSize: 14
@@ -60,61 +73,23 @@ Rectangle{
                 }
             }
             onClicked: {
-                if (periodicCaptureCheck.checked)
+                if (mainviewParent.isPeriodicCaptureChecked())
                 {
-                    if(periodicCaptureTimer.running)
-                        periodicCaptureTimer.stop();
+                    if(mainviewParent.isPeriodicCaptureRunning())
+                        mainviewParent.setPeriodicCaptureRunning(false)
                     else{
                         _controllerCore.triggerCapture();
-                        periodicCaptureTimer.start();
+                        mainviewParent.setPeriodicCaptureRunning(true)
                     }
                 }
-                else _controllerCore.triggerCapture();
+                else
+                    _controllerCore.triggerCapture();
             }
-        }
-        Rectangle{
-            color: "gray"
-            Layout.preferredHeight: 20
-            Layout.preferredWidth: 2
-            radius: 1
-        }
-        Button{
-            id: quickRecordButton
-            Layout.fillWidth: true
-            Layout.preferredHeight: 40
-            Rectangle{
-                anchors.fill: parent
-                color: "#16151D"
-                Row{
-                    height: parent.height
-                    spacing: 5
-                    anchors.centerIn: parent
-                    Image{
-                        height: 20
-                        y: 10
-
-                        source: quickRecordText.recording ? "/img/png/overlay_video_active.png" : "/img/png/overlay_video.png"
-                        fillMode: Image.PreserveAspectFit
-                    }
-                    Text {
-                        id: quickRecordText
-                        property bool recording
-                        text: "Record"
-                        color: quickRecordText.recording ? "red" : ((visVidCheck.checked || radVidCheck.checked) ? (quickRecordButton.hovered ? "orange" : "white") : "gray")
-                        font.bold: true
-                        font.pixelSize: 14
-                        x: 5
-                        anchors.verticalCenter: parent.verticalCenter
-                    }
-                }
-            }
-            onClicked:  _controllerCore.toggleRecording()
         }
         Connections{
             target: _controllerCore
-            onCaptureRecordingChanged:
+            function onCaptureRecordingChanged(capturing, recording)
             {
-                quickRecordText.recording = recording
                 quickCaptureText.capturing = capturing
             }
         }
@@ -123,13 +98,14 @@ Rectangle{
             Layout.preferredHeight: 20
             Layout.preferredWidth: 2
             radius: 1
-            visible: _controllerCore.type != mainWindow.securityType
+            visible: _controllerCore.type !== mainWindow.securityType
         }
         Button{
             id: quickRangeButton
             Layout.fillWidth: true
             Layout.preferredHeight: 40
-            visible: _controllerCore.type != mainWindow.securityType
+            visible: _controllerCore.type !== mainWindow.securityType
+
             Rectangle{
                 anchors.fill: parent
                 color: "#16151D"
@@ -144,7 +120,7 @@ Rectangle{
                         fillMode: Image.PreserveAspectFit
                     }
                     Text {
-                        text: "Range"
+                        text: qsTr("Range") + _translator.emptyString
                         color: quickRangeButton.highlighted ? "red" : (quickRangeButton.hovered ? "orange" : "white")
                         font.bold: true
                         font.pixelSize: 14
@@ -161,6 +137,7 @@ Rectangle{
                     quickAlarmsButton.highlighted = false
                     mainviewParent.setAlarmsSliderVisible(false)
                     mainviewParent.setBlackbodyRectVisible(false)
+                    _controllerCore.setCurrentRoiIdx(-1)
                 }
             }
         }
@@ -169,13 +146,13 @@ Rectangle{
             Layout.preferredHeight: 20
             Layout.preferredWidth: 2
             radius: 1
-            visible: _controllerCore.type != mainWindow.securityType
+            visible: _controllerCore.type !== mainWindow.securityType
         }
         Button{
             id: quickAlarmsButton
             Layout.fillWidth: true
             Layout.preferredHeight: 40
-            visible: _controllerCore.type != mainWindow.securityType
+            visible: _controllerCore.type !== mainWindow.securityType
             Rectangle{
                 anchors.fill: parent
                 color: "#16151D"
@@ -190,7 +167,7 @@ Rectangle{
                         fillMode: Image.PreserveAspectFit
                     }
                     Text {
-                        text: "Alarms"
+                        text: qsTr("Alarms") + _translator.emptyString
                         color: quickAlarmsButton.highlighted ? "red" : (quickAlarmsButton.hovered ? "orange" : "white")
                         font.bold: true
                         font.pixelSize: 14
@@ -207,6 +184,7 @@ Rectangle{
                     mainviewParent.setManRangeSliderVisible(false)
                     mainviewParent.setBlackbodyRectVisible(false)
                     quickRangeButton.highlighted = false
+                    _controllerCore.setCurrentRoiIdx(-1)
                 }
             }
         }
@@ -215,7 +193,7 @@ Rectangle{
             Layout.preferredHeight: 20
             Layout.preferredWidth: 2
             radius: 1
-            visible: _controllerCore.type != mainWindow.securityType
+            visible: _controllerCore.type !== mainWindow.securityType
         }
         Button{
             id: quickShutterButton
@@ -237,7 +215,7 @@ Rectangle{
 
                     }
                     Text {
-                        text: "Disconnect"
+                        text: qsTr("Disconnect") + _translator.emptyString
                         color: quickShutterButton.hovered ? "orange" : "white"
                         font.bold: true
                         x: 5
@@ -248,7 +226,7 @@ Rectangle{
                 }
             }
             onClicked:{
-                _controllerCore.setEthModeOff();
+                _controllerCore.close()
                 showConnectionWindow()
             }
         }

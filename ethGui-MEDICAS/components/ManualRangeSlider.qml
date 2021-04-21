@@ -30,6 +30,7 @@ Rectangle{
 
 
 
+
     TextField {
         id: sliderFrom
         anchors.left: parent.left
@@ -66,9 +67,9 @@ Rectangle{
 
         function setFirstRange(val)
         {
-            if(_controllerCore.manualRange2 - val < 10)
+            if(_controllerCore.manualRange2 - val < _controllerCore.getManualDiffLimit())
             {
-                var newVal = _controllerCore.manualRange2 - 10
+                var newVal = _controllerCore.manualRange2 - _controllerCore.getManualDiffLimit()
                 _controllerCore.manualRange1 = newVal
                 setFirstVal(newVal)
                 return;
@@ -77,12 +78,11 @@ Rectangle{
         }
         function setSecondRange(val)
         {
-            if( val - _controllerCore.manualRange1 < 10)
+            if( val - _controllerCore.manualRange1 < _controllerCore.getManualDiffLimit())
             {
-                var newVal = 10 + (+_controllerCore.manualRange1)
+                var newVal = _controllerCore.getManualDiffLimit() + (+_controllerCore.manualRange1)
                 _controllerCore.manualRange2 = newVal
                 setSecondVal(newVal)
-                console.log(newVal)
                 return;
             }
            _controllerCore.manualRange2 = val;
@@ -91,21 +91,21 @@ Rectangle{
 
         anchors.left: sliderFrom.right
         width: parent.width*2/3
-        from: 0
-        to: 50
+        from: _controllerCore.getManualMinLimit()
+        to: _controllerCore.getManualMaxLimit()
         first.value: _controllerCore.manualRange1
         second.value: _controllerCore.manualRange2
 
         Connections{
             target: rangeManSlider.first
-            onValueChanged: {
+            function onValueChanged() {
                 rangeFirstDebounceTimer.stop();
                 rangeFirstDebounceTimer.start();
             }
         }
         Connections{
             target: rangeManSlider.second
-            onValueChanged: {
+            function onValueChanged() {
                 rangeSecondDebounceTimer.stop();
                 rangeSecondDebounceTimer.start();
             }
@@ -113,14 +113,16 @@ Rectangle{
 
         Connections{
             target: _controllerCore
-            onManualRange1Changed:{
+            function onManualRange1Changed(){
                 rangeManSlider.first.value = (+_controllerCore.manualRange1)
             }
-        }
-        Connections{
-            target: _controllerCore
-            onManualRange2Changed:{
+            function onManualRange2Changed(){
                 rangeManSlider.second.value = (+_controllerCore.manualRange2)
+            }
+            function onUnitsChanged(val) {
+                rangeManSlider.from = _controllerCore.getManualMinLimit()
+                rangeManSlider.to = _controllerCore.getManualMaxLimit()
+
             }
         }
 

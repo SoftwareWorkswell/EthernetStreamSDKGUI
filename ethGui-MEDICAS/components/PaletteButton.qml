@@ -4,7 +4,7 @@ import QtQuick.Controls 2.5
 Button {
     id: control
     text: qsTr("Button")
-    width: 255
+    width: 275
     font.pixelSize: 12
 
     contentItem: Text {
@@ -18,7 +18,7 @@ Button {
     }
 
     background: Rectangle {
-    //  implicitWidth: parent.width
+        //  implicitWidth: parent.width
         implicitHeight: 10
         opacity: enabled ? 1 : 0.3
         border.color: control.highlighted ? "orange" : "black"

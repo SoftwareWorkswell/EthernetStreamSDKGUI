@@ -1,12 +1,12 @@
 #ifndef CUSTOMTHREAD_H
 #define CUSTOMTHREAD_H
 
-#include <qobject.h>
-#include <qthread.h>
+#include <QDebug>
+#include <QImage>
+#include <QMutex>
+#include <QObject>
 #include <QString>
-#include <qdebug.h>
-#include <qimage.h>
-#include <qmutex.h>
+#include <QThread>
 
 #include <opencv2/core.hpp>
 #include <opencv2/highgui.hpp>
@@ -14,25 +14,26 @@
 #include <opencv2/videoio.hpp>
 
 #include <memory>
-#include "streamthread.h"
+
 #include "networkclient.h"
+#include "streamthread.h"
 
 
-extern QImage *streamFrameVisible;
+extern QImage streamFrameVisible;
 extern QMutex *visibleMutex;
 
-class VisibleThread: public StreamThread
-{
+class VisibleThread : public StreamThread {
     Q_OBJECT
 
 public:
-    VisibleThread(bool* stream, const QString & ssrc) :  StreamThread (stream, ssrc)
-    {}
+    VisibleThread(bool *stream, const QString &ssrc) : StreamThread(stream, ssrc) {}
+
+
+private:
+    void detectFaces(cv::Mat &frame);
 
 protected:
     virtual void run() override;
-
-
 };
 
 

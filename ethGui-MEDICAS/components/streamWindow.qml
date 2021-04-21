@@ -10,7 +10,6 @@ ApplicationWindow {
         {
             var cwidth = _controllerCore.mainCamera === "THERMAL" ? 16 : 5;
             var cheight = _controllerCore.mainCamera === "THERMAL" ? 9 : 4;
-            console.log("resized separate window");
             if(parentWidth/cwidth*cheight < parentHeight)
             {
                 separateView.width = parentWidth;

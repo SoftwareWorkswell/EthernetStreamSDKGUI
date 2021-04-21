@@ -34,6 +34,13 @@ Rectangle{
         advancedImg.source = "/img/png/button_settings.png";
         advancedButton.highlighted = false;
     }
+
+    function hideAllPositionForms()
+    {
+        _controllerCore.setCurrentRoiIdx(-1)
+        mainviewParent.hideAllQuickRects()
+    }
+
     Rectangle{
         anchors.fill: parent
         color: "#33333D"
@@ -42,8 +49,8 @@ Rectangle{
             height: parent.height
             ControlButton {
                 id: rangeButton
-                text: "Range"
-                visible: _controllerCore.type != mainWindow.securityType
+                text: qsTr("Range") + _translator.emptyString
+                visible: _controllerCore.type !== mainWindow.securityType
                 Layout.fillWidth: true
                 Layout.preferredHeight: 54
                 Image{
@@ -65,11 +72,12 @@ Rectangle{
                     else{
                         controlPanel.hideAllPopups();
                     }
+                    controlPanel.hideAllPositionForms();
                 }
             }
             ControlButton {
                 id: functionsButton
-                text: "Functions"
+                text: qsTr("Functions") + _translator.emptyString
                 Layout.fillWidth: true
                 Layout.preferredHeight: 54
                 Image{
@@ -91,11 +99,12 @@ Rectangle{
                     else{
                         controlPanel.hideAllPopups();
                     }
+                    controlPanel.hideAllPositionForms();
                 }
             }
             ControlButton {
                 id: paletteButton
-                text: "Palette"
+                text: qsTr("Palette") + _translator.emptyString
                 Layout.fillWidth: true
                 Layout.preferredHeight: 54
                 Image{
@@ -117,11 +126,12 @@ Rectangle{
                     else{
                         controlPanel.hideAllPopups();
                     }
+                    controlPanel.hideAllPositionForms();
                 }
             }
             ControlButton {
                 id: captureButton
-                text: "Capture"
+                text: qsTr("Capture") + _translator.emptyString
                 Layout.fillWidth: true
                 Layout.preferredHeight: 54
                 Image{
@@ -143,11 +153,12 @@ Rectangle{
                     else{
                         controlPanel.hideAllPopups();
                     }
+                    controlPanel.hideAllPositionForms();
                 }
             }
             ControlButton {
                 id: measureButton
-                text: "Measure"
+                text: qsTr("Measure") + _translator.emptyString
                 Layout.fillWidth: true
                 Layout.preferredHeight: 54
                 Image{
@@ -159,6 +170,13 @@ Rectangle{
                     y: 7
                 }
                 onClicked: {
+                    // heating up check
+                    if(_controllerCore.isHeatingUp())
+                    {
+                        mainviewParent.showHeatingUpMessage();
+                        return;
+                    }
+
                     if (!mainviewParent.isPopupVisible("measurePopup"))
                     {
                         controlPanel.hideAllPopups();
@@ -169,11 +187,12 @@ Rectangle{
                     else{
                         controlPanel.hideAllPopups();
                     }
+                    controlPanel.hideAllPositionForms();
                 }
             }
             ControlButton {
                 id: advancedButton
-                text: "Advanced"
+                text: qsTr("Advanced") + _translator.emptyString
                 Layout.fillWidth: true
                 Layout.preferredHeight: 54
                 Image{
@@ -195,6 +214,7 @@ Rectangle{
                     else{
                         controlPanel.hideAllPopups();
                     }
+                    controlPanel.hideAllPositionForms();
                 }
             }
         }

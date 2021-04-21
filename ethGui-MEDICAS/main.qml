@@ -3,47 +3,69 @@ import QtQuick.Window 2.12
 import QtQuick.Controls 2.5
 import QtQuick.Controls.Styles 1.4
 import QtQuick.Layouts 1.3
+
 import "./components"
 import "./components/popups"
 import "./components/panels"
 
 Window {
     id: mainWindow
-    property bool testGUI:false
+    // set to true to just show gui without camera connection
+    property bool testGUI: false
+    property var separateWindow: Qt.createComponent(
+                                     "./components/SeparateWindow.qml").createObject(
+                                     "streamWindow")
+    property bool disconnectedWindowShown: false
+    property bool connectionWindowShown: false
     visible: true
     minimumWidth: 960
     minimumHeight: 540
-    title: qsTr("MEDICAS Ethernet Stream SDK GUI 0.0.1")
-    onClosing: {
-        _controllerCore.setEthModeOff()
-        _controllerCore.close()
-    }
+    title: Qt.application.name + " " + Qt.application.version
+    onClosing: _controllerCore.close()
     function showConnectionWindow() {
-        var component = Qt.createComponent("components/ConnectionWindow.qml");
-        var window    = component.createObject(mainWindow);
-        window.show();
-        mainWindow.hide();
+        var component = Qt.createComponent("components/ConnectionWindow.qml")
+        var window = component.createObject(mainWindow)
+        window.show()
+        mainWindow.hide()
+        disconnectedWindowShown = false
+        connectionWindowShown = true
     }
 
-    Rectangle{
+    function showDisconnectedWindow() {
+        if (disconnectedWindowShown == false
+                && connectionWindowShown == false) {
+            var component = Qt.createComponent(
+                        "components/CameraDisconnectedMessage.qml")
+            var window = component.createObject(mainWindow)
+            window.show()
+            mainWindow.disconnectedWindowShown = true
+        }
+    }
+
+    function onAutoReconnected() {
+        disconnectedWindowShown = false
+        connectionWindowShown = false
+    }
+
+    Rectangle {
         anchors.fill: parent
-        Row{
+        Item {
             id: mainRow
             anchors.fill: parent
-            Rectangle{
-                anchors.left: parent.left;
-                anchors.top: parent.top;
-                width: parent.width *7/10
+            Rectangle {
+                anchors.left: parent.left
+                anchors.top: parent.top
+                width: parent.width * 7 / 10
                 height: parent.height
                 color: "red"
-                Row{
+                Item {
                     anchors.fill: parent
-                    Rectangle{
+                    Rectangle {
                         anchors.top: parent.top
                         anchors.left: parent.left
                         width: parent.width
                         height: parent.height - 40
-                        Rectangle{
+                        Rectangle {
                             anchors.fill: parent
                             ControlPanel {
                                 id: controlPanel
@@ -52,18 +74,17 @@ Window {
                                 height: parent.height
                                 width: 70
                             }
-                            MainviewPanel{
+                            MainviewPanel {
                                 id: mainviewParent
                                 height: parent.height
                                 anchors.left: controlPanel.right
                                 anchors.right: palettePanel.left
                             }
-                            Component
-                            {
-                                id:stopComponent
+                            Component {
+                                id: stopComponent
                                 GradientStop {}
                             }
-                            PalettePanel{
+                            PalettePanel {
                                 id: palettePanel
                                 anchors.right: parent.right
                                 width: 60
@@ -72,7 +93,7 @@ Window {
                             }
                         }
                     }
-                    QuickMenuPanel{
+                    QuickMenuPanel {
                         id: quickMenuPanel
                         color: "#16151D"
                         width: parent.width
@@ -81,45 +102,26 @@ Window {
                     }
                 }
             }
-            RightPanel{
+            RightPanel {
                 id: rightPanel
-                anchors.right: parent.right;
-                anchors.top: parent.top;
-                width: parent.width *3/10
+                anchors.right: parent.right
+                anchors.top: parent.top
+                width: parent.width * 3 / 10
                 height: parent.height
                 color: "black"
             }
         }
     }
     Component.onCompleted: {
-        if(mainWindow.testGUI)
+        if (mainWindow.testGUI)
             return
         showConnectionWindow()
     }
-    ApplicationWindow {
-        id: streamWindow
-        title: qsTr("MEDICAS Ethernet Stream SDK GUI")
-        minimumWidth: 640
-        minimumHeight: 480
-        onHeightChanged: separateView.onResizedSeparateWindow(streamWindow.width, streamWindow.height)
-        onWidthChanged: separateView.onResizedSeparateWindow(streamWindow.width, streamWindow.height)
-        Image {
-            id: separateView
-            function onResizedSeparateWindow(parentWidth, parentHeight)
-            {
-                var cwidth = _controllerCore.mainCamera === "THERMAL" ? 16 : 5;
-                var cheight = _controllerCore.mainCamera === "THERMAL" ? 9 : 4;
-                if(parentWidth/cwidth*cheight < parentHeight)
-                {
-                    separateView.width = parentWidth;
-                    separateView.height = separateView.width/cwidth*cheight;
-                }
-                else{
-                    separateView.height = parentHeight;
-                    separateView.width = separateView.height/cheight*cwidth;
-                }
-            }
-            anchors.centerIn: parent
+
+    Connections {
+        target: _controllerCore
+        function onCameraDisconnected() {
+            showDisconnectedWindow()
         }
     }
 }

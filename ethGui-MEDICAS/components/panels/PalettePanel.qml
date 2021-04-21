@@ -8,6 +8,7 @@ import QtQuick.Layouts 1.3
 import "../"
 
 Rectangle{
+
     Rectangle{
         id: palette
         function applyPaletteValues(){
@@ -37,91 +38,95 @@ Rectangle{
         }
         Connections{
             target: _controllerCore
-            onPaletteValuesChanged: palette.applyPaletteValues()
+            function onPaletteValuesChanged(){
+                palette.applyPaletteValues()
+            }
         }
         Rectangle{
             id: alarmPaletteAboveRect
-            color: colorAboveComboBox.currentText
-            width: palette.width
-            anchors.top: parent.top
+            color: _controllerCore.criticalColor
+            width: _controllerCore.alarmMode === 1 ? palette.width : (palette.width / 2)
+            anchors.left: parent.left
+            y: parent.y
             visible: false
             function reDraw()
             {
-                if (!_controllerCore.compareFw("1.1.1", _controllerCore.firmwareVersion))
-                    return;
-                var height;
-                var ptop = Math.round(_controllerCore.paletteTop*10)/10
-                var pbottom = Math.round(_controllerCore.paletteBottom*10)/10
-                if (rangeAlarmSlider.second.value < ptop)
+                if(_controllerCore.alarmMode > 0)
                 {
-                    height = palette.height * (ptop - rangeAlarmSlider.second.value)  / (ptop - pbottom);
-                    alarmPaletteAboveRect.height = height > palette.height ?  palette.height :  height;
-                }   else alarmPaletteAboveRect.height = 0;
-                if (rangeAlarmSlider.first.value > pbottom)
-                {
-                    height = palette.height * (rangeAlarmSlider.first.value - pbottom)  / (ptop - pbottom);
-                    alarmPaletteBelowRect.height = height > palette.height ?  palette.height :  height;
-                }   else alarmPaletteBelowRect.height = 0;
-                alarmPaletteAboveRect.visible = false;
-                alarmPaletteBetweenRect.visible = false;
-                alarmPaletteBelowRect.visible = false;
-                if(alarmModeAbove.checked)
+                    var height;
+                    // top and bottom temp of palette
+                    var ptop = Math.round(_controllerCore.paletteTop*10)/10
+                    var pbottom = Math.round(_controllerCore.paletteBottom*10)/10
+                    var criticalMax = Math.round(_controllerCore.getCriticalUpperBoundary() *10)/10
+                    if (_controllerCore.alarmCritical < ptop)
+                    {
+                        console.log('redraw ' + (ptop - criticalMax) + ' ' + (ptop - _controllerCore.alarmCritical))
+                        height = palette.height * (((ptop - _controllerCore.alarmCritical)- (ptop - criticalMax))  / (ptop - pbottom));
+                        alarmPaletteAboveRect.y = palette.height * (((ptop - criticalMax))  / (ptop - pbottom));
+                        alarmPaletteAboveRect.height = height > palette.height ?  palette.height :  height;
+                    }
+                    else
+                        alarmPaletteAboveRect.height = 0;
+                    if (_controllerCore.alarmPreventive > pbottom)
+                    {
+                        alarmPaletteBetweenRect.height = palette.height * (((ptop - _controllerCore.alarmPreventive) - (ptop - _controllerCore.alarmCritical)) / (ptop - pbottom))
+                        alarmPaletteBetweenRect.y =  palette.height * (((ptop - _controllerCore.alarmCritical))  / (ptop - pbottom));
+                    }
+                    else
+                        alarmPaletteBetweenRect.height = 0;
                     alarmPaletteAboveRect.visible = true;
-                else if(alarmModeBetween.checked)
                     alarmPaletteBetweenRect.visible = true;
-                else if(alarmModeBelow.checked)
-                    alarmPaletteBelowRect.visible = true;
-                else if (alarmModeOutside.checked)
+                }
+                else
                 {
-                    alarmPaletteAboveRect.visible = true;
-                    alarmPaletteBelowRect.visible = true;
+                    alarmPaletteAboveRect.visible = false;
+                    alarmPaletteBetweenRect.visible = false;
                 }
             }
         }
         Connections{
             target: _controllerCore
-            onPaletteTopChanged: alarmPaletteAboveRect.reDraw();
-        }
-        Connections{
-            target: _controllerCore
-            onPaletteBottomChanged: alarmPaletteAboveRect.reDraw();
+            function onPaletteTopChanged(){
+                alarmPaletteAboveRect.reDraw();
+            }
+            function onAlarmPreventiveChanged()
+            {
+                alarmPaletteAboveRect.reDraw();
+            }
+            function onAlarmCriticalChanged()
+            {
+                alarmPaletteAboveRect.reDraw();
+            }
+            function onAlarmModeChanged()
+            {
+                alarmPaletteAboveRect.reDraw();
+            }
+            function onPaletteBottomChanged(){
+                alarmPaletteAboveRect.reDraw();
+            }
+            function onTemperatureModeChanged(){
+                alarmPaletteAboveRect.reDraw();
+            }
         }
         Rectangle{
             id: alarmPaletteBetweenRect
-            color: colorBetweenComboBox.currentText
-            width: palette.width
+            color: _controllerCore.preventiveColor
+            width: _controllerCore.alarmMode === 1 ? palette.width : (palette.width / 2)
             anchors.top: alarmPaletteAboveRect.bottom
-            anchors.bottom: alarmPaletteBelowRect.top
+            anchors.left: parent.left
+            visible: false
+        }
+    }
 
-            visible: false
-        }
-        Rectangle{
-            id: alarmPaletteBelowRect
-            color: colorBelowComboBox.currentText
-            width: palette.width
-            anchors.bottom: parent.bottom
-            visible: false
-        }
-    }
-    Text{
-        id: rangeModeText
-        text: _controllerCore.rangeMode === 0 ? "A" : (_controllerCore.rangeMode === 1 ? "M" : "S")
-        font.bold: true
-        anchors.bottom: palette.top
-        anchors.left: palette.left
-        color: "white"
-        anchors.bottomMargin: 2
-        anchors.leftMargin: 5
-    }
     Rectangle{
         anchors.left: palette.right
         anchors.leftMargin: 5
         height: parent.height
         anchors.bottomMargin: 10
         anchors.topMargin: 30
-        visible: _controllerCore.type != mainWindow.securityType
+        visible: _controllerCore.type !== mainWindow.securityType
         Text{
-            text: "°C"
+            text: _controllerCore.units()
             color: "white"
             font.bold: true
             y: 5

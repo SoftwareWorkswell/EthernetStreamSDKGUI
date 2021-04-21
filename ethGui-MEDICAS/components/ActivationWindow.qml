@@ -1,3 +1,4 @@
+
 import QtQuick 2.3
 import QtQuick.Controls 1.2
 import QtQuick.Layouts 1.3
@@ -7,7 +8,23 @@ ApplicationWindow {
     width: 300
     height: 150
     flags: Qt.WindowStaysOnTopHint
-    title: "Activation"
+    title: qsTr("Activation") + _translator.emptyString
+
+    function doActivate(){
+        if (_controllerCore.activate(activationTextField.text))
+        {
+            _controllerCore.setup();
+            activationWindow.hide();
+            mainWindow.show();
+        }
+        else
+            actErrorText.visible = true;
+    }
+
+    Action{
+        shortcut: StandardKey.Cancel
+        onTriggered: Qt.callLater(Qt.quit);
+    }
 
     ColumnLayout{
 
@@ -17,23 +34,26 @@ ApplicationWindow {
         Text {
             Layout.alignment: Qt.AlignHCenter
 
-            text: qsTr("Please, enter your activation licence: ")
+            text: qsTr("Please, enter your activation licence: ") + _translator.emptyString
         }
 
         TextField{
             id: activationTextField
             Layout.alignment: Qt.AlignHCenter
-
+            focus: true
             Layout.preferredWidth: 200
 
-            placeholderText: "Your activation licence"
+            placeholderText: qsTr("Your activation licence") + _translator.emptyString;
+            onAccepted: {
+                activationWindow.doActivate();
+            }
         }
         Text {
             id: actErrorText
 
             Layout.alignment: Qt.AlignHCenter
 
-            text: "Activation not successfull"
+            text: qsTr("Activation not successfull") + _translator.emptyString
             color: "red"
 
             visible: false
@@ -44,22 +64,15 @@ ApplicationWindow {
             spacing: 5
 
             Button{
-                text: "OK"
+                text: qsTr("OK") + _translator.emptyString
                 onClicked: {
-
-                    if (_controllerCore.activate(activationTextField.text))
-                    {
-                        _controllerCore.setup();
-                        activationWindow.hide();
-                        mainWindow.show();
-                    }
-                    else actErrorText.visible = true;
+                    activationWindow.doActivate();
             }
 
         }
 
             Button{
-                text: "Cancel"
+                text: qsTr("Cancel") + _translator.emptyString
                 onClicked: {
                     Qt.callLater(Qt.quit);
                 }
@@ -72,9 +85,9 @@ ApplicationWindow {
     Component.onCompleted: {
         if (_controllerCore.isActivated())
         {
+            _controllerCore.setup();
             activationWindow.hide();
             mainWindow.show();
-            _controllerCore.setup();
         }
     }
 }
