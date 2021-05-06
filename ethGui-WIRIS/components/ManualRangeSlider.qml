@@ -28,8 +28,6 @@ Rectangle{
     property alias firstVal: rangeManSlider.fVal
     property alias secondVal: rangeManSlider.sVal
 
-
-
     TextField {
         id: sliderFrom
         anchors.left: parent.left
@@ -43,7 +41,7 @@ Rectangle{
         verticalAlignment: Text.AlignVCenter
         visible: rangeManSlider.visible
         text:  Math.round(rangeManSlider.first.value*10)/10
-        onTextChanged: {
+        onAccepted: {
             if (+sliderFrom.text === Math.round(rangeManSlider.first.value*10)/10)
             {
                 sliderFrom.color = "orange";
@@ -55,6 +53,22 @@ Rectangle{
                 sliderFrom.color = "orange";
             }
             else sliderFrom.color = "red";
+        }
+        onFocusChanged: {
+            if(!focus)
+            {
+                if (+sliderFrom.text === Math.round(rangeManSlider.first.value*10)/10)
+                {
+                    sliderFrom.color = "orange";
+                    return;
+                }
+                if (+sliderFrom.text < +sliderTo.text && +sliderFrom.text >= rangeManSlider.from && sliderFrom.text != "")
+                {
+                    rangeManSlider.first.value = sliderFrom.text;
+                    sliderFrom.color = "orange";
+                }
+                else sliderFrom.color = "red";
+            }
         }
     }
 
@@ -73,37 +87,26 @@ Rectangle{
            _controllerCore.manualRange2 = val;
         }
 
-
         anchors.left: sliderFrom.right
         width: parent.width*2/3
         from: 1
         to: 100
         first.value: _controllerCore.manualRange1
         second.value: _controllerCore.manualRange2
-
-
         Component.onCompleted: setSliderRanges()
 
         Connections{
-            target: range1
-            onCheckedChanged: setSliderRanges()
-        }
-
-        Connections{
-            target: range2
-            onCheckedChanged: setSliderRanges()
-        }
-
-        Connections{
             target: rangeManSlider.first
-            onValueChanged: {
+            function onValueChanged()
+            {
                 rangeFirstDebounceTimer.stop();
                 rangeFirstDebounceTimer.start();
             }
         }
         Connections{
             target: rangeManSlider.second
-            onValueChanged: {
+            function onValueChanged()
+            {
                 rangeSecondDebounceTimer.stop();
                 rangeSecondDebounceTimer.start();
             }
@@ -111,13 +114,12 @@ Rectangle{
 
         Connections{
             target: _controllerCore
-            onManualRange1Changed:{
+            function onManualRange1Changed()
+            {
                 rangeManSlider.first.value = _controllerCore.manualRange1
             }
-        }
-        Connections{
-            target: _controllerCore
-            onManualRange2Changed:{
+            function onManualRange2Changed()
+            {
                 rangeManSlider.second.value = _controllerCore.manualRange2
             }
         }
@@ -134,9 +136,6 @@ Rectangle{
             repeat: false
             onTriggered: rangeManSlider.setSecondRange(rangeManSlider.second.value)
         }
-
-
-
     }
 
     TextField {
@@ -152,7 +151,7 @@ Rectangle{
         verticalAlignment: Text.AlignVCenter
         visible: rangeManSlider.visible
         text:  Math.round(rangeManSlider.second.value*10)/10
-        onTextChanged: {
+        onAccepted: {
             if (+sliderTo.text === Math.round(rangeManSlider.second.value*10)/10){
                 sliderTo.color = "orange";
                 return;
@@ -164,6 +163,20 @@ Rectangle{
             }
             else sliderTo.color = "red";
         }
+        onFocusChanged: {
+            if(!focus)
+            {
+                if (+sliderTo.text === Math.round(rangeManSlider.second.value*10)/10){
+                    sliderTo.color = "orange";
+                    return;
+                }
+                if (+sliderFrom.text < +sliderTo.text && +sliderTo.text <= rangeManSlider.to && sliderTo.text != "")
+                {
+                    rangeManSlider.second.value = sliderTo.text;
+                    sliderTo.color = "orange";
+                }
+                else sliderTo.color = "red";
+            }
+        }
     }
-
 }

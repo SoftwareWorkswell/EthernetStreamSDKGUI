@@ -29,7 +29,8 @@ SpinBox {
         inputMethodHints: Qt.ImhFormattedNumbersOnly
         Connections{
             target: control
-            onValueChanged:{
+            function onValueChanged()
+            {
                     controlText.text = control.value + " min"
             }
         }

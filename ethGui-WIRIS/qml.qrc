@@ -127,5 +127,16 @@
         <file>components/ManualRangeSlider.qml</file>
         <file>components/ManualRangeSliderQuick.qml</file>
         <file>components/InfoPanel.qml</file>
+        <file>img/png/busy2.png</file>
+        <file>components/EnvironmentsSwitch.qml</file>
+        <file>components/popups/CapturePopup.qml</file>
+        <file>components/popups/AdvancedPopup.qml</file>
+        <file>components/popups/MeasurePopup.qml</file>
+        <file>components/popups/FunctionsPopup.qml</file>
+        <file>components/popups/PalettePopup.qml</file>
+        <file>components/popups/RangePopup.qml</file>
+        <file>components/InfoComp.qml</file>
+        <file>img/png/info.png</file>
+        <file>components/CameraDisconnectedMessage.qml</file>
     </qresource>
 </RCC>

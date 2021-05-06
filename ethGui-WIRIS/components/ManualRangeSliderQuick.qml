@@ -4,7 +4,7 @@ import QtQuick.Controls 2.12
 
 Rectangle{
     color: "transparent"
-    visible: rangeModeMan.checked
+    visible: rangePopup.rangeModeManChecked()
     Layout.preferredHeight: 40
     Layout.preferredWidth: parent.width
 
@@ -16,47 +16,47 @@ Rectangle{
         height: parent.height
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
-        text:  Math.round(quickManSlider.first.value*10)/10+ " °C"
+        text:  Math.round(quickManSlider.first.value*10)/10+ _controllerCore.thermalUnitSign
     }
 
     RangeSlider {
         id: quickManSlider
-
         anchors.left: sliderFrom.right
         width: parent.width*2/3
-        from: rangeManSlider.from
-        to: rangeManSlider.to
-        first.value: rangeManSlider.fVal
-        second.value: rangeManSlider.sVal
-
+        from: rangePopup.from
+        to: rangePopup.to
+        first.value: rangePopup.fVal
+        second.value: rangePopup.sVal
     }
 
     Connections{
         target: quickManSlider.first
-        onValueChanged: {
-            rangeManSlider.setFirstVal(quickManSlider.first.value);
+        function onValueChanged()
+        {
+            rangePopup.rangeManSliderSetFirst(quickManSlider.first.value);
         }
     }
     Connections{
         target: quickManSlider.second
-        onValueChanged: {
-            rangeManSlider.setSecondVal(quickManSlider.second.value);
+        function onValueChanged()
+        {
+            rangePopup.rangeManSliderSetSecond(quickManSlider.second.value);
         }
     }
     Connections{
         target: _controllerCore
-        onManualRange1Changed:{
+        function onManualRange1Changed()
+        {
             quickManSlider.first.value = _controllerCore.manualRange1
         }
     }
     Connections{
         target: _controllerCore
-        onManualRange2Changed:{
+        function onManualRange2Changed()
+        {
             quickManSlider.second.value = _controllerCore.manualRange2
         }
     }
-
-
 
     Text {
         anchors.left: quickManSlider.right
@@ -66,7 +66,7 @@ Rectangle{
         height: parent.height
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
-        text: Math.round(quickManSlider.second.value*10)/10+ " °C"
+        text: Math.round(quickManSlider.second.value*10)/10 + _controllerCore.thermalUnitSign
     }
 
 }

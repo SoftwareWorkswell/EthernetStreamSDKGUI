@@ -1,5 +1,5 @@
 import QtQuick 2.3
-import QtQuick.Controls 1.2
+import QtQuick.Controls 2.5
 import QtQuick.Layouts 1.3
 
 ApplicationWindow {
@@ -8,7 +8,22 @@ ApplicationWindow {
     height: 150
     flags: Qt.WindowStaysOnTopHint
     title: "Activation"
-
+    function doActivate(){
+        if (_controllerCore.activate(activationTextField.text))
+        {
+            if(_controllerCore.setup())
+            {
+                activationWindow.hide();
+                mainWindow.show();
+            }
+        }
+        else
+            actErrorText.visible = true;
+    }
+    Action{
+        shortcut: StandardKey.Cancel
+        onTriggered: Qt.callLater(Qt.quit);
+    }
     ColumnLayout{
 
         width: parent.width
@@ -23,10 +38,13 @@ ApplicationWindow {
         TextField{
             id: activationTextField
             Layout.alignment: Qt.AlignHCenter
-            textColor: "black"
+
             Layout.preferredWidth: 200
 
             placeholderText: "Your activation licence"
+            onAccepted: {
+                activationWindow.doActivate();
+            }
         }
         Text {
             id: actErrorText
@@ -46,17 +64,10 @@ ApplicationWindow {
             Button{
                 text: "OK"
                 onClicked: {
+                    activationWindow.doActivate();
+                }
 
-                    if (_controllerCore.activate(activationTextField.text))
-                    {
-                        _controllerCore.setup();
-                        activationWindow.hide();
-                        mainWindow.show();
-                    }
-                    else actErrorText.visible = true;
             }
-
-        }
 
             Button{
                 text: "Cancel"
@@ -65,16 +76,18 @@ ApplicationWindow {
                 }
             }
 
-    }
+        }
 
-}
+    }
 
     Component.onCompleted: {
         if (_controllerCore.isActivated())
         {
-            _controllerCore.setup();
-            activationWindow.hide();
-            mainWindow.show();
+            if(_controllerCore.setup())
+            {
+                activationWindow.hide();
+                mainWindow.show();
+            }
         }
     }
 }
