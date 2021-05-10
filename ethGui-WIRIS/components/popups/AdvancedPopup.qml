@@ -505,7 +505,7 @@ ControlPopup{
 
             Text{
                 id: rebootWarningText
-                text: "Reboot?\nThis will restart the app\nand make WIRIS\nunreachable for a while"
+                text: "Reboot?\nThis will CLOSE the app\nand make WIRIS\nunreachable for a while\nApplication needs to\nbe restarted manually"
                 color: "red"
                 visible: false
                 font.pixelSize: 12

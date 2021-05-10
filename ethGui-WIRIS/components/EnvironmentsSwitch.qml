@@ -91,7 +91,7 @@ ColumnLayout {
                             return _controllerCore.thermalUnit == "CELSIUS" ? gisEnvs.env1LowerC : _controllerCore.thermalUnit == "KELVIN" ? gisEnvs.env1LowerK  : gisEnvs.env1LowerF
                         return -25
                     })()
-                    setSliderRanges()
+                    mainWindow.setSliderRanges()
                 }
             }
             onClicked: _controllerCore.setEnviroment1(range1.envValue);
@@ -129,7 +129,7 @@ ColumnLayout {
                             return _controllerCore.thermalUnit == "CELSIUS" ? gisEnvs.env2LowerC : _controllerCore.thermalUnit == "KELVIN" ? gisEnvs.env2LowerK  : gisEnvs.env2LowerF
                         return -40
                     })()
-                    setSliderRanges()
+                    mainWindow.setSliderRanges()
                 }
             }
         }
@@ -161,7 +161,7 @@ ColumnLayout {
                             return _controllerCore.thermalUnit == "CELSIUS" ? gisEnvs.env3LowerC : _controllerCore.thermalUnit == "KELVIN" ? gisEnvs.env3LowerK  : gisEnvs.env3LowerF
                         return 100
                     })()
-                    setSliderRanges()
+                    mainWindow.setSliderRanges()
                 }
             }
             onClicked: _controllerCore.setEnviroment3(range3.envValue);
@@ -230,6 +230,7 @@ ColumnLayout {
                 range4.upperThreshold = _controllerCore.enviromentUpperThreshold();
                 range4.lowerThreshold = _controllerCore.enviromentLowerThreshold();
             }
+            mainWindow.setSliderRanges()
         }
     }
 }

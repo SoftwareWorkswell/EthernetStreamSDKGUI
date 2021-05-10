@@ -84,9 +84,9 @@ void ControllerCoreInterface::close()
 {
     if(_core && _connection->_connected)
     {
-        _streamer->stopStream();
         _connection->_helperTreadFlag = false;
         _helperThread->wait();
+        _streamer->stopStream();
         _core->send(Protocol::prepareMessage(_protocol.SET_ETH_MODE, Protocol::boolToString(false)));
         _core->disconnect();
         _core.reset();
@@ -528,13 +528,12 @@ void ControllerCoreInterface::reboot()
 {
     if (!compareFw(_vals.MIN_FW_VERSION, _params->_firmwareVersion))
         return;
-
     _connection->_helperTreadFlag = false;
+    _helperThread->wait();
     _streamer->stopStream();
     _core->send(Protocol::prepareMessage(_protocol.REBOOT));
     close();
     QCoreApplication::quit();
-    QProcess::startDetached(qApp->arguments()[0], qApp->arguments());
 }
 
 bool ControllerCoreInterface::connected() const
@@ -745,6 +744,11 @@ double  ControllerCoreInterface::alarmTo() const
 double  ControllerCoreInterface::alarmFrom() const
 {
     return _params->_alarmFrom;
+}
+
+bool ControllerCoreInterface::cooldownDone() const
+{
+    return _params->_cooledDown;
 }
 
 bool ControllerCoreInterface::sbusLogging() const

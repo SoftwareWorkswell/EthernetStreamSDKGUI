@@ -75,7 +75,8 @@ class ControllerCoreInterface : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(bool connected READ connected NOTIFY connectedChanged)
-    Q_PROPERTY(bool isSetup READ isSetup)
+    Q_PROPERTY(bool isSetup READ isSetup NOTIFY connectedChanged)
+    Q_PROPERTY(bool cooldownDone READ cooldownDone NOTIFY connectedChanged)
     Q_PROPERTY(QString ipAddress READ ipAddress NOTIFY ipAdressChanged)
     Q_PROPERTY(QString type READ type NOTIFY typeChanged)
     Q_PROPERTY(QString firmwareVersion READ firmwareVersion NOTIFY firmwareVersionChanged)
@@ -289,6 +290,7 @@ private:
     int alarmMode() const;
     double alarmTo() const;
     double alarmFrom() const;
+    bool cooldownDone() const;
     bool sbusLogging() const;
     bool mavlinkLogging() const;
     QString thermalUnit() const;

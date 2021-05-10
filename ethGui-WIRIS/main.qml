@@ -12,13 +12,11 @@ Window {
     }
     function setSliderRanges()
     {
+        console.log('set slider ranges')
         if(_controllerCore.isSetup)
             rangePopup.setSliderRanges()
     }
-    CameraDisconnectedMessage
-    {
 
-    }
     function onAutoReconnected() {
         disconnectedWindowShown = false
         connectionWindowShown = false
@@ -63,7 +61,7 @@ Window {
     visible: true
     minimumWidth: 960
     minimumHeight: 540
-    title: qsTr("WIRIS & GIS Ethernet Stream SDK GUI 1.0.0B3")
+    title: qsTr("WIRIS & GIS Ethernet Stream SDK GUI 1.0.0B4")
 
     Rectangle{
         anchors.fill: parent
@@ -611,10 +609,10 @@ Window {
                                 width: 60
                                 height: parent.height
                                 color: "#444444"
-
+                                //visible: _controllerCore.type !== mainWindow.gisType ? true : _controllerCore.cooldownDone
                                 Rectangle{
                                     id: palette
-
+                                    //visible: _controllerCore.type !== mainWindow.gisType ? true : _controllerCore.cooldownDone
                                     function applyPaletteValues(){
                                         var data = _controllerCore.paletteValues;
                                         var newStops = [];
@@ -734,6 +732,7 @@ Window {
                                     color: "white"
                                     anchors.bottomMargin: 2
                                     anchors.leftMargin: 5
+                                    visible: _controllerCore.type !== mainWindow.gisType ? true : _controllerCore.cooldownDone
                                 }
                                 Rectangle{
 
@@ -742,7 +741,11 @@ Window {
                                     height: parent.height
                                     anchors.bottomMargin: 10
                                     anchors.topMargin: 30
-                                    visible: _controllerCore.type != mainWindow.securityType
+                                    visible:{
+                                        if(_controllerCore.type == mainWindow.securityType)
+                                            return false;
+                                        return _controllerCore.type !== mainWindow.gisType ? true : _controllerCore.cooldownDone
+                                    }
 
                                     Text{
                                         id: unitText
@@ -1347,8 +1350,16 @@ Window {
                                                         return;
                                                     if(_controllerCore.type == mainWindow.gisType)
                                                     {
-                                                        shutterText.text = last;
-                                                        nucPopup.visible = false;
+                                                        if(_controllerCore.cooldownDone)
+                                                        {
+                                                            shutterText.text = last;
+                                                            nucPopup.visible = false;
+                                                        }
+                                                        else
+                                                        {
+                                                            shutterText.text = "N/A";
+                                                            nucPopup.visible = false;
+                                                        }
                                                         return;
                                                     }
                                                     if (advancedPopup.syncShutterChecked())
@@ -1678,7 +1689,7 @@ Window {
     }
     ApplicationWindow {
         id: streamWindow
-        title: qsTr("WIRIS & GIS Ethernet Stream SDK GUI 1.0.0B3")
+        title: qsTr("WIRIS & GIS Ethernet Stream SDK GUI 1.0.0B4")
         minimumWidth: 640
         minimumHeight: 480
 

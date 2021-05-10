@@ -20,7 +20,6 @@ bool ControllerCore::send(const QString &message)
 void ControllerCore::disconnect()
 {
     _networkClient->disconnect();
-    _networkClient.reset();
 }
 
 bool ControllerCore::fetchAll()

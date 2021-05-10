@@ -20,6 +20,7 @@ ControlPopup{
         rangeManSlider.to = thresholds[1]
         rangeManSlider.firstVal = rangeManSlider.from;
         rangeManSlider.secondVal = rangeManSlider.to;
+        rangeManSlider.setTexts()
     }
     function rangeManSliderSetFirst(val)
     {
@@ -121,7 +122,7 @@ ControlPopup{
                 width: 60
                 height: 30
                 text: _controllerCore.spanWindow
-                validator: RegExpValidator { regExp: /^(\d)+\.\d/}
+                validator: RegExpValidator { regExp: /^(\d)+\.?\d?/}
                 background: Rectangle{color: "#66000000"; border.color: "orange"; border.width: 1}
                 color: "orange"
                 onAccepted: {
@@ -166,7 +167,7 @@ ControlPopup{
                 text: _controllerCore.spanCenter
                 background: Rectangle{color: "#66000000"; border.color: "orange"; border.width: 1}
                 color: "orange"
-                validator: RegExpValidator { regExp: /^[+-]?(\d)+\.\d/}
+                validator: RegExpValidator { regExp: /^[+-]?(\d)+\.?\d?/}
                 onAccepted: {
                     if (spanCenterTextField.text == "" || spanCenterTextField.text.substr(spanCenterTextField.text.length -1 ) == ".")
                     {

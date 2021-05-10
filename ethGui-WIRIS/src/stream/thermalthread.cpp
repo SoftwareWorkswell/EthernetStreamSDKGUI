@@ -14,14 +14,14 @@ void ThermalThread::run()
         font.setPixelSize(20);
         p.setFont(font);
         if(std::stoi(_cooldownTime->toStdString()) == -1)
-            p.drawText(90, 240, "Please switch the camera button to ON position.");
+            p.drawText(50, 240, "Please switch the thermal camera button to ON position.");
         else
         {
             int sec = std::stoi(_cooldownTime->toStdString());
             p.drawText(90, 240, "Camera is cooling down. Please Wait " + QString::number(sec / 60) + " min " + QString::number(sec % 60) + " sec.");
         }
         emit imageSourceChanged();
-        msleep(250);
+        msleep(200);
     }
     if(!(*_stream))
         return;

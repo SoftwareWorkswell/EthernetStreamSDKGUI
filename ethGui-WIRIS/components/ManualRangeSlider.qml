@@ -23,6 +23,12 @@ Rectangle{
         rangeSecondDebounceTimer.start();
     }
 
+    function setTexts()
+    {
+        sliderTo.text = to
+        sliderFrom.text = from
+    }
+
     property alias from: rangeManSlider.from
     property alias to: rangeManSlider.to
     property alias firstVal: rangeManSlider.fVal
@@ -36,7 +42,7 @@ Rectangle{
         background: Rectangle{color: "#66000000"; border.color: "orange"; border.width: 1}
         height: 30
         y: 5
-        validator: RegExpValidator { regExp: /^[+-]?(\d)+\.\d/}
+        validator: RegExpValidator { regExp: /^[+-]?(\d)+\.?\d?/}
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
         visible: rangeManSlider.visible
@@ -146,7 +152,7 @@ Rectangle{
         background: Rectangle{color: "#66000000"; border.color: "orange"; border.width: 1}
         height: 30
         y: 5
-        validator: RegExpValidator { regExp: /^[+-]?(\d)+\.\d/}
+        validator: RegExpValidator { regExp: /^[+-]?(\d)+\.?\d?/}
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
         visible: rangeManSlider.visible

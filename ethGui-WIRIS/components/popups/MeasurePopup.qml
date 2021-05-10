@@ -11,9 +11,10 @@ ControlPopup{
     {
         rangeAlarmSlider.from = vals[0];
         rangeAlarmSlider.to = vals[1];
-
         rangeAlarmSlider.first.value = rangeAlarmSlider.from;
         rangeAlarmSlider.second.value = rangeAlarmSlider.to;
+        alarmFromText.text = rangeAlarmSlider.from;
+        alarmToText.text = rangeAlarmSlider.to;
     }
     function rangeAlarmSliderSecond()
     {
@@ -190,7 +191,7 @@ ControlPopup{
                 background: Rectangle{color: "#66000000"; border.color: "orange"; border.width: 1}
                 height: 30
                 y: 5
-                validator: RegExpValidator { regExp: /^[+-]?(\d)+\.\d/}
+                validator: RegExpValidator { regExp: /^[+-]?(\d)+\.?\d?/}
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
                 visible: rangeAlarmSlider.visible
@@ -335,7 +336,7 @@ ControlPopup{
                 background: Rectangle{color: "#66000000"; border.color: "orange"; border.width: 1}
                 height: 30
                 y: 5
-                validator: RegExpValidator { regExp: /^[+-]?(\d)+\.\d/}
+                validator: RegExpValidator { regExp: /^[+-]?(\d)+\.?\d?/}
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
                 visible: rangeAlarmSlider.visible

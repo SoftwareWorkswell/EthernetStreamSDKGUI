@@ -177,7 +177,6 @@ void HelperThread::loadCooldown()
     {
         std::getline(iss, time, ' ');
         int sec = std::stoi(time);
-        qDebug() << "cooldown" << sec;
         emit cooldownTimeChanged(QString::fromStdString(time));
         if(sec == 0)
             *_cooledDown = true;
