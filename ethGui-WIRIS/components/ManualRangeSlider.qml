@@ -87,10 +87,18 @@ Rectangle{
         function setFirstRange(val)
         {
            _controllerCore.manualRange1 = val;
+            if(val % 1 === 0)
+                sliderFrom.text = val
+            else
+                sliderFrom.text = val.toFixed(1)
         }
         function setSecondRange(val)
         {
            _controllerCore.manualRange2 = val;
+            if(val % 1 === 0)
+                sliderTo.text = val
+            else
+                sliderTo.text = val.toFixed(1)
         }
 
         anchors.left: sliderFrom.right

@@ -394,14 +394,14 @@ void ControllerCoreInterface::setShutterPeriod(int val)
 
 void ControllerCoreInterface::setEnviroment1(const QString & env)
 {
+    if(!(_core && _connection->_connected))
+        return;
     QThread *thread = QThread::create([&]{
         emit envChangeStarted();
         if(_core && _connection->_connected)
             _core->setEnviroment1(env);
-        emit manualRange1Changed(_params->_manualRange1);
-        emit paletteBottomChanged(_params->_paletteBottom);
-        emit manualRange2Changed(_params->_manualRange2);
-        emit paletteTopChanged(_params->_paletteTop);
+        _core->setManualRanges(enviromentLowerThreshold(), enviromentUpperThreshold());
+        setRangeMode(_params->_rangeMode);
         QThread::msleep(1000); // wait until camera finishes settings
         emit currentEnviromentChanged();
     });
@@ -410,14 +410,14 @@ void ControllerCoreInterface::setEnviroment1(const QString & env)
 
 void ControllerCoreInterface::setEnviroment2(const QString & env)
 {
+    if(!(_core && _connection->_connected))
+        return;
     QThread *thread = QThread::create([&]{
         emit envChangeStarted();
         if(_core && _connection->_connected)
             _core->setEnviroment2(env);
-        emit manualRange1Changed(_params->_manualRange1);
-        emit paletteBottomChanged(_params->_paletteBottom);
-        emit manualRange2Changed(_params->_manualRange2);
-        emit paletteTopChanged(_params->_paletteTop);
+        _core->setManualRanges(enviromentLowerThreshold(), enviromentUpperThreshold());
+        setRangeMode(_params->_rangeMode);
         QThread::msleep(1000); // wait until camera finishes settings
         emit currentEnviromentChanged();
     });
@@ -426,14 +426,14 @@ void ControllerCoreInterface::setEnviroment2(const QString & env)
 
 void ControllerCoreInterface::setEnviroment3(const QString & env)
 {
+    if(!(_core && _connection->_connected))
+        return;
     QThread *thread = QThread::create([&]{
         emit envChangeStarted();
         if(_core && _connection->_connected)
             _core->setEnviroment3(env);
-        emit manualRange1Changed(_params->_manualRange1);
-        emit paletteBottomChanged(_params->_paletteBottom);
-        emit manualRange2Changed(_params->_manualRange2);
-        emit paletteTopChanged(_params->_paletteTop);
+        _core->setManualRanges(enviromentLowerThreshold(), enviromentUpperThreshold());
+        setRangeMode(_params->_rangeMode);
         QThread::msleep(1000); // wait until camera finishes settings
         emit currentEnviromentChanged();
     });
@@ -442,14 +442,14 @@ void ControllerCoreInterface::setEnviroment3(const QString & env)
 
 void ControllerCoreInterface::setEnviroment4(const QString & env)
 {
+    if(!(_core && _connection->_connected))
+        return;
     QThread *thread = QThread::create([&]{
         emit envChangeStarted();
         if(_core && _connection->_connected)
             _core->setEnviroment4(env);
-        emit manualRange1Changed(_params->_manualRange1);
-        emit paletteBottomChanged(_params->_paletteBottom);
-        emit manualRange2Changed(_params->_manualRange2);
-        emit paletteTopChanged(_params->_paletteTop);
+        _core->setManualRanges(enviromentLowerThreshold(), enviromentUpperThreshold());
+        setRangeMode(_params->_rangeMode);
         QThread::msleep(1000); // wait until camera finishes settings
         emit currentEnviromentChanged();
     });

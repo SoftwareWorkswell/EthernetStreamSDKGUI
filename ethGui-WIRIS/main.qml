@@ -61,7 +61,7 @@ Window {
     visible: true
     minimumWidth: 960
     minimumHeight: 540
-    title: qsTr("WIRIS & GIS Ethernet Stream SDK GUI 1.0.0B4")
+    title: qsTr("WIRIS & GIS Ethernet Stream SDK GUI 1.0.0B5")
 
     Rectangle{
         anchors.fill: parent
@@ -1689,7 +1689,7 @@ Window {
     }
     ApplicationWindow {
         id: streamWindow
-        title: qsTr("WIRIS & GIS Ethernet Stream SDK GUI 1.0.0B4")
+        title: qsTr("WIRIS & GIS Ethernet Stream SDK GUI 1.0.0B5")
         minimumWidth: 640
         minimumHeight: 480
 

@@ -109,12 +109,20 @@ ControlPopup{
                 if(!_controllerCore.isSetup)
                     return;
                 _controllerCore.alarmFrom = val;
+                if(val % 1 === 0)
+                    alarmFromText.text = val
+                else
+                    alarmFromText.text = val.toFixed(1)
             }
             function setAlarmSecondVal(val)
             {
                 if(!_controllerCore.isSetup)
                     return;
                 _controllerCore.alarmTo = val;
+                if(val % 1 === 0)
+                    alarmToText.text = val
+                else
+                    alarmToText.text = val.toFixed(1)
             }
 
             CustomRadioButton1{
