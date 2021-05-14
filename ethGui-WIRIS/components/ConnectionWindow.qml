@@ -7,7 +7,7 @@ ApplicationWindow {
     width: 350
     height: 175
     flags: Qt.WindowStaysOnTopHint
-    title: "Connect"
+    title: "WIRIS & GIS Ethernet Stream SDK GUI 1.0.0 - Connect"
 
     function tryConnect()
     {

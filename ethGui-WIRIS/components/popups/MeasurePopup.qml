@@ -129,34 +129,73 @@ ControlPopup{
                 checked: true
                 id: alarmModeOff
                 text: "Off"
-                onCheckedChanged: if(checked) alarmLayout.setAlarmMode(0, rangeAlarmSlider.first.value, rangeAlarmSlider.second.value);
-
+                onCheckedChanged:{
+                    rangeAlarmSlider.first.handle.visible = true
+                    rangeAlarmSlider.second.handle.visible = true
+                    alarmToText.enabled = true
+                    alarmFromText.enabled = true
+                    alarmFromText.text = rangeAlarmSlider.first.value.toFixed(1)
+                    alarmToText.text = rangeAlarmSlider.second.value.toFixed(1)
+                    if(checked) alarmLayout.setAlarmMode(0, rangeAlarmSlider.first.value, rangeAlarmSlider.second.value);
+                }
             }
 
 
             CustomRadioButton1{
                 id: alarmModeAbove
                 text: "Above"
-                onCheckedChanged: if(checked) alarmLayout.setAlarmMode(1, rangeAlarmSlider.from, rangeAlarmSlider.second.value);
+                onCheckedChanged:{
+                    rangeAlarmSlider.first.handle.visible = false
+                    alarmFromText.enabled = false
+                    rangeAlarmSlider.second.handle.visible = true
+                    alarmToText.enabled = true
+                    alarmFromText.text = rangeAlarmSlider.from
+                    alarmToText.text = rangeAlarmSlider.second.value.toFixed(1)
+                    if(checked) alarmLayout.setAlarmMode(1, rangeAlarmSlider.from, rangeAlarmSlider.second.value);
+                }
             }
 
             CustomRadioButton1{
                 id: alarmModeBelow
                 text: "Below"
                 onClicked: {rangeAlarmSlider.second.value = rangeAlarmSlider.to;}
-                onCheckedChanged: if(checked) alarmLayout.setAlarmMode(2, rangeAlarmSlider.first.value, rangeAlarmSlider.to);
+                onCheckedChanged:{
+                    rangeAlarmSlider.second.handle.visible = false
+                    alarmToText.enabled = false
+                    rangeAlarmSlider.first.handle.visible = true
+                    alarmFromText.enabled = true
+                    alarmFromText.text = rangeAlarmSlider.first.value.toFixed(1)
+                    alarmToText.text = rangeAlarmSlider.to
+                    if(checked) alarmLayout.setAlarmMode(2, rangeAlarmSlider.first.value, rangeAlarmSlider.to);
+                }
             }
 
             CustomRadioButton1{
                 id: alarmModeBetween
                 text: "Between"
-                onCheckedChanged: if(checked) alarmLayout.setAlarmMode(3, rangeAlarmSlider.first.value, rangeAlarmSlider.second.value);
+                onCheckedChanged:{
+                    rangeAlarmSlider.first.handle.visible = true
+                    rangeAlarmSlider.second.handle.visible = true
+                    alarmToText.enabled = true
+                    alarmFromText.enabled = true
+                    alarmFromText.text = rangeAlarmSlider.first.value.toFixed(1)
+                    alarmToText.text = rangeAlarmSlider.second.value.toFixed(1)
+                    if(checked) alarmLayout.setAlarmMode(3, rangeAlarmSlider.first.value, rangeAlarmSlider.second.value);
+                }
             }
 
             CustomRadioButton1{
                 id: alarmModeOutside
                 text: "Outside"
-                onCheckedChanged: if(checked) alarmLayout.setAlarmMode(4, rangeAlarmSlider.first.value, rangeAlarmSlider.second.value);
+                onCheckedChanged:{
+                    rangeAlarmSlider.first.handle.visible = true
+                    rangeAlarmSlider.second.handle.visible = true
+                    alarmToText.enabled = true
+                    alarmFromText.enabled = true
+                    alarmFromText.text = rangeAlarmSlider.first.value.toFixed(1)
+                    alarmToText.text = rangeAlarmSlider.second.value.toFixed(1)
+                    if(checked) alarmLayout.setAlarmMode(4, rangeAlarmSlider.first.value, rangeAlarmSlider.second.value);
+                }
             }
 
             Connections{
@@ -198,6 +237,7 @@ ControlPopup{
                 color: "orange"
                 background: Rectangle{color: "#66000000"; border.color: "orange"; border.width: 1}
                 height: 30
+                opacity: enabled ? 1 : 0.5
                 y: 5
                 validator: RegExpValidator { regExp: /^[+-]?(\d)+\.?\d?/}
                 horizontalAlignment: Text.AlignHCenter
@@ -244,6 +284,7 @@ ControlPopup{
                     target: rangeAlarmSlider.second
                     function onValueChanged()
                     {
+                        alarmToText.text = rangeAlarmSlider.second.value.toFixed(1)
                         if (alarmModeBelow.checked && rangeAlarmSlider.second.value != rangeAlarmSlider.to)
                             rangeAlarmSlider.second.value = rangeAlarmSlider.to;
                         if (!alarmModeBelow.checked)
@@ -257,6 +298,7 @@ ControlPopup{
                 Connections {
                     target: rangeAlarmSlider.first
                     function onValueChanged() {
+                        alarmFromText.text = rangeAlarmSlider.first.value.toFixed(1)
                         if (alarmModeAbove.checked && rangeAlarmSlider.first.value != rangeAlarmSlider.from)
                         {
                             rangeAlarmSlider.first.value = rangeAlarmSlider.from;
@@ -286,13 +328,13 @@ ControlPopup{
 
                 Timer{
                     id: alarmFirstDebounceTimer
-                    interval: 300
+                    interval: 100
                     repeat: false
                     onTriggered: alarmLayout.setAlarmFirstVal(rangeAlarmSlider.first.value)
                 }
                 Timer{
                     id: alarmSecondDebounceTimer
-                    interval: 300
+                    interval: 100
                     repeat: false
                     onTriggered: alarmLayout.setAlarmSecondVal(rangeAlarmSlider.second.value)
                 }
@@ -343,6 +385,7 @@ ControlPopup{
                 color: "orange"
                 background: Rectangle{color: "#66000000"; border.color: "orange"; border.width: 1}
                 height: 30
+                opacity: enabled ? 1 : 0.5
                 y: 5
                 validator: RegExpValidator { regExp: /^[+-]?(\d)+\.?\d?/}
                 horizontalAlignment: Text.AlignHCenter

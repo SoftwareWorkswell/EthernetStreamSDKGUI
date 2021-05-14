@@ -12,7 +12,6 @@ Window {
     }
     function setSliderRanges()
     {
-        console.log('set slider ranges')
         if(_controllerCore.isSetup)
             rangePopup.setSliderRanges()
     }
@@ -61,7 +60,7 @@ Window {
     visible: true
     minimumWidth: 960
     minimumHeight: 540
-    title: qsTr("WIRIS & GIS Ethernet Stream SDK GUI 1.0.0B5")
+    title: qsTr("WIRIS & GIS Ethernet Stream SDK GUI 1.0.0")
 
     Rectangle{
         anchors.fill: parent
@@ -1670,7 +1669,14 @@ Window {
                             Image{
                                 anchors.horizontalCenter: parent.horizontalCenter
                                 y: 5
-                                source: _controllerCore.type == mainWindow.securityType ? "img/png/logo_workswell_wws.png" : "img/png/logo_workswell_wwp.png"
+                                source: {
+                                    if(_controllerCore.type == mainWindow.securityType)
+                                        return "img/png/logo_workswell_wws.png";
+                                    else if(_controllerCore.type == mainWindow.gisType)
+                                        return "img/png/logo_workswell_gis.png";
+                                    else
+                                        return "img/png/logo_workswell_wwp.png";
+                                }
                                 fillMode: Image.PreserveAspectFit
                                 height: 30
                             }
@@ -1689,7 +1695,7 @@ Window {
     }
     ApplicationWindow {
         id: streamWindow
-        title: qsTr("WIRIS & GIS Ethernet Stream SDK GUI 1.0.0B5")
+        title: qsTr("WIRIS & GIS Ethernet Stream SDK GUI 1.0.0")
         minimumWidth: 640
         minimumHeight: 480
 

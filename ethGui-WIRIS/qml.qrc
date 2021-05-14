@@ -138,5 +138,6 @@
         <file>components/InfoComp.qml</file>
         <file>img/png/info.png</file>
         <file>components/CameraDisconnectedMessage.qml</file>
+        <file>img/png/logo_workswell_gis.png</file>
     </qresource>
 </RCC>

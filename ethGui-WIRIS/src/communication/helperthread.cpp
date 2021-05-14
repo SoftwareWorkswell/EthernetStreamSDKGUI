@@ -168,7 +168,6 @@ void HelperThread::loadGps()
 
 }
 
-#include <QDebug>
 void HelperThread::loadCooldown()
 {
     std::istringstream iss;

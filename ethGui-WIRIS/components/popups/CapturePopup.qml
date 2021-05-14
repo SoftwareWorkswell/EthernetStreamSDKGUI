@@ -30,7 +30,7 @@ ControlPopup{
         PopupItem{
 
             width: parent.width
-            itemText: "Capture & Record"
+            itemText: "Capture & Record To Camera"
             Layout.preferredHeight: 25
         }
         Text{

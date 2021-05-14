@@ -113,6 +113,7 @@ Rectangle{
             target: rangeManSlider.first
             function onValueChanged()
             {
+                sliderFrom.text = rangeManSlider.first.value.toFixed(1)
                 rangeFirstDebounceTimer.stop();
                 rangeFirstDebounceTimer.start();
             }
@@ -121,6 +122,7 @@ Rectangle{
             target: rangeManSlider.second
             function onValueChanged()
             {
+                sliderTo.text = rangeManSlider.second.value.toFixed(1)
                 rangeSecondDebounceTimer.stop();
                 rangeSecondDebounceTimer.start();
             }
@@ -140,13 +142,13 @@ Rectangle{
 
         Timer{
             id: rangeFirstDebounceTimer
-            interval: 1000
+            interval: 100
             repeat: false
             onTriggered: rangeManSlider.setFirstRange(rangeManSlider.first.value)
         }
         Timer{
             id: rangeSecondDebounceTimer
-            interval: 1000
+            interval: 100
             repeat: false
             onTriggered: rangeManSlider.setSecondRange(rangeManSlider.second.value)
         }

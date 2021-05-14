@@ -1,6 +1,5 @@
 #include "controllercoreinterface.h"
 #include <src/camera/camerautils.h>
-#include <QDebug>
 ControllerCoreInterface::ControllerCoreInterface(QObject * parent)
     :QObject(parent)
 {
@@ -704,10 +703,8 @@ bool ControllerCoreInterface::streamingThermal() const
 {
     return _connection->_streamFlagThermal;
 }
-#include <QDebug>
 bool ControllerCoreInterface::streamingVisible() const
 {
-    qDebug() << "vis flag" << _connection->_streamFlagVisible;
     return _connection->_streamFlagVisible;
 }
 
@@ -962,7 +959,6 @@ void ControllerCoreInterface::onHelperConnectionStateChanged(bool state, double 
 
 void ControllerCoreInterface::onCameraDisconnected()
 {
-    qCritical() << "Camera disconnected!";
     emit cameraDisconnected();
     _connection->_helperTreadFlag = false;
     _helperThread->wait();

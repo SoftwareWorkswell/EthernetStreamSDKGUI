@@ -19,6 +19,8 @@ void ThermalThread::run()
         {
             int sec = std::stoi(_cooldownTime->toStdString());
             p.drawText(90, 240, "Camera is cooling down. Please Wait " + QString::number(sec / 60) + " min " + QString::number(sec % 60) + " sec.");
+            p.drawText(90, 260, "Keep the cap mounted, camera will perform");
+            p.drawText(90, 280, "shutter calibration after cooldown.");
         }
         emit imageSourceChanged();
         msleep(200);
@@ -54,7 +56,10 @@ void ThermalThread::run()
             data = new uchar[frame.rows * frame.step];
         }
         memcpy(data, frame.data, frame.rows * frame.step);
-        streamFrame = QImage(data, frame.cols, frame.rows, frame.step, QImage::Format_RGB888).copy();
+        if(*(_type) == _vals.GIS_TYPE)
+            streamFrame = QImage(data, frame.cols, frame.rows, frame.step, QImage::Format_RGB888).scaled(frame.cols *2, frame.rows *2);
+        else
+            streamFrame = QImage(data, frame.cols, frame.rows, frame.step, QImage::Format_RGB888);
         if(*_type == _vals.GIS_TYPE)
             drawGisExtremes();
         else
@@ -199,29 +204,33 @@ void ThermalThread::drawGisExtremes()
     thermalMutex->unlock();
 
     bool resize = size > 2;
-    int outerRectSz = resize ? 25 : 40;
+    int outerRectSz = resize ? 25 : 35;
     if (*_showCenter)
     {
-        drawx = _center->x - outerRectSz/2; // > 2 ? _maximum->x - 2 : _maximum->x;
-        drawy = _center->y - outerRectSz/2;// > 2 ? _maximum->y - 2 : _maximum->y;
+        drawx = _center->x*2 - outerRectSz/2; // > 2 ? _maximum->x - 2 : _maximum->x;
+        drawy = _center->y*2 - outerRectSz/2;// > 2 ? _maximum->y - 2 : _maximum->y;
         val = _center->val;
         paint.begin(&streamFrame);
         paint.drawImage(QRect(drawx, drawy, outerRectSz, outerRectSz), QImage(":/img/png/cross_center.png"));
         if(*_showVals)
         {
+            int offX = resize ? 0 : 4;
+            int offY = resize ? 30: 50;
             QFont font=paint.font();
             resize ? font.setPointSize(4) : font.setPointSize(8);
             font.setBold(true);
             paint.setFont(font);
             paint.setPen(Qt::white);
-            paint.drawText( resize ? drawx : drawx + 4, resize ? drawy + 30: drawy  + 50, QString::number((int)(val*10.0)/10.0) + *_unitSign);
+            paint.drawText(drawx + offX, drawy + offY, QString::number((int)(val*10.0)/10.0) + *_unitSign);
         }
         paint.end();
     }
     if (_maximum->show)
     {
-        drawx = _maximum->x - outerRectSz/2;// > 2 ? _maximum->x - 2 : _maximum->x;
-        drawy = _maximum->y - outerRectSz/2;// > 2 ? _maximum->y - 2 : _maximum->y;
+        int offX = resize ? 0 : 4;
+        int offY = resize ? 30: 50;
+        drawx = _maximum->x*2 - outerRectSz/2;// > 2 ? _maximum->x - 2 : _maximum->x;
+        drawy = _maximum->y*2 - outerRectSz/2;// > 2 ? _maximum->y - 2 : _maximum->y;
         val = _maximum->val;
         paint.begin(&streamFrame);
         paint.drawImage(QRect(drawx, drawy, outerRectSz, outerRectSz), QImage(":/img/png/cross_max.png"));
@@ -233,15 +242,23 @@ void ThermalThread::drawGisExtremes()
             font.setBold(true);
             paint.setFont(font);
             paint.setPen(Qt::white);
-            paint.drawText( resize ? drawx : drawx + 4, resize  ? drawy + 30: drawy + 50, QString::number((int)(val*10.0)/10.0) + *_unitSign);
+            if(_maximum->y*2 > streamFrame.height()/2)
+                offY = resize ? -3: -5;
+            if(_maximum->x*2 < streamFrame.height()/8)
+                offX = resize ? 15: 25;
+            if(_maximum->x*2 > streamFrame.height()/8*7)
+                offX = resize ? -15: -25;
+            paint.drawText(drawx + offX, drawy + offY , QString::number((int)(val*10.0)/10.0) + *_unitSign);
         }
         paint.end();
     }
 
     if (_minimum->show)
     {
-        drawx = _minimum->x - outerRectSz/2;// > 2 ? _maximum->x - 2 : _maximum->x;
-        drawy = _minimum->y - outerRectSz/2;// > 2 ? _maximum->y - 2 : _maximum->y;
+        int offX = resize ? 0 : 4;
+        int offY = resize ? 30: 50;
+        drawx = _minimum->x*2 - outerRectSz/2;// > 2 ? _maximum->x - 2 : _maximum->x;
+        drawy = _minimum->y*2 - outerRectSz/2;// > 2 ? _maximum->y - 2 : _maximum->y;
         val = _minimum->val;
         paint.begin(&streamFrame);
         paint.drawImage(QRect(drawx, drawy, outerRectSz, outerRectSz), QImage(":/img/png/cross_min.png"));
@@ -252,7 +269,13 @@ void ThermalThread::drawGisExtremes()
             font.setBold(true);
             paint.setFont(font);
             paint.setPen(Qt::white);
-            paint.drawText( resize ? drawx: drawx + 4 , resize ? drawy+30 : drawy+50, QString::number((int)(val*10.0)/10.0) + *_unitSign);
+            if(_minimum->y*2 > streamFrame.height()/2)
+                offY = resize ? -3: -5;
+            if(_minimum->x*2 < streamFrame.height()/8)
+                offX = resize ?  15: 25;
+            if(_minimum->x*2 > streamFrame.height()/8*7)
+                offX = resize ? -15: -25;
+            paint.drawText( drawx + offX, drawy + offY, QString::number((int)(val*10.0)/10.0) + *_unitSign);
         }
         paint.end();
     }

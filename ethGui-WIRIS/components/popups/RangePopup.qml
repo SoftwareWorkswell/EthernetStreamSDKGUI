@@ -14,7 +14,6 @@ ControlPopup{
     function setSliderRanges()
     {
         var thresholds = environmentsSwitch.thresholds()
-        console.log(' set slider ranges; ' +thresholds[0] + ' ' + thresholds[1])
         measurePopup.setRangeAlarmSliders(thresholds)
         rangeManSlider.from = thresholds[0]
         rangeManSlider.to = thresholds[1]
